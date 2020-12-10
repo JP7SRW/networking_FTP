@@ -21,7 +21,8 @@ order_comb = ttk.Combobox(main_frm, values=["昇順", "降順"], width=10)
 order_comb.current(0)
 
 # ウィジェット作成（実行ボタン）
-app_btn = ttk.Button(main_frm, text="実行")
+app_open = ttk.Button(main_frm, text="実行")
+app_cancel = ttk.Button(main_frm, text="キャンセル")
 
 # ウィジェットの配置
 folder_label.grid(column=0, row=0, pady=10)
@@ -29,7 +30,8 @@ folder_box.grid(column=1, row=0, sticky=tkinter.EW, padx=5)
 folder_btn.grid(column=2, row=0)
 order_label.grid(column=0, row=1)
 order_comb.grid(column=1, row=1, sticky=tkinter.W, padx=5)
-app_btn.grid(column=1, row=2)
+app_open.grid(column=1, row=2, sticky=tkinter.W, padx=90)
+app_cancel.grid(column=1, row=2, sticky=tkinter.E, padx=90)
 
 # 配置設定
 main_win.columnconfigure(0, weight=1)
