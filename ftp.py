@@ -17,3 +17,4 @@ server.serve_forever()
 
 
 TestRuRu
+TypeError
