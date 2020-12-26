@@ -45,6 +45,10 @@ def stop():
     server.close_all()
     exit()
 
+def exit_button():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        stop()
+
 thread1 = threading.Thread(target=open)
 
 folder_path = tkinter.StringVar()
@@ -95,5 +99,7 @@ ftp_close.grid(column=1, row=4, sticky=tkinter.E, padx=90)
 main_win.columnconfigure(0, weight=1)
 main_win.rowconfigure(0, weight=1)
 main_frm.columnconfigure(1, weight=1)
+
+main_win.protocol("WM_DELETE_WINDOW", exit_button)
 
 main_win.mainloop()
