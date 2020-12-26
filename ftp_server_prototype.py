@@ -47,9 +47,14 @@ def stop():
     server.close_all()
     exit()
 
-def disp():
+def disp(): # サーバ接続情報確認ホップアップ
     ip = socket.gethostbyname(socket.gethostname())
     disp_serverinfo.main(ip,port_box.get(),user_box.get(),password_box.get())
+
+def exit_button(): # ×ボタンが押下された際の終了処理
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        main_win.destroy()
+        stop()
 
 thread1 = threading.Thread(target=open)
 
@@ -103,5 +108,5 @@ disp_info.grid(column=1, row=5, sticky=tkinter.S, padx=90)
 main_win.columnconfigure(0, weight=1)
 main_win.rowconfigure(0, weight=1)
 main_frm.columnconfigure(1, weight=1)
-
+main_win.protocol("WM_DELETE_WINDOW", exit_button)
 main_win.mainloop()
