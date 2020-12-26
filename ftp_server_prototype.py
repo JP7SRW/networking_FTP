@@ -3,16 +3,18 @@ import pyftpdlib.authorizers
 import pyftpdlib.handlers
 import pyftpdlib.servers
 import tkinter
+import socket
 import os
 import threading
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
+import disp_serverinfo
 
 # メインウィンドウ
 main_win = tkinter.Tk()
 main_win.title("FTPサーバの起動")
-main_win.geometry("500x200")
+main_win.geometry("500x230")
 
 # メインフレーム
 main_frm = ttk.Frame(main_win)
@@ -45,6 +47,10 @@ def stop():
     server.close_all()
     exit()
 
+def disp():
+    ip = socket.gethostbyname(socket.gethostname())
+    disp_serverinfo.main(ip,port_box.get(),user_box.get(),password_box.get())
+
 thread1 = threading.Thread(target=open)
 
 folder_path = tkinter.StringVar()
@@ -69,6 +75,7 @@ password_box = ttk.Entry(main_frm)
 # ウィジェット作成（実行ボタン）
 ftp_open = ttk.Button(main_frm, text="起動", command = thread1.start)
 ftp_close = ttk.Button(main_frm, text="終了", command = stop)
+disp_info = ttk.Button(main_frm, text="接続情報表示", command = disp)
 
 # ウィジェットの配置
 folder_label.grid(column=0, row=0, pady=10)
@@ -90,6 +97,7 @@ password_box.insert(0, "password")
 
 ftp_open.grid(column=1, row=4, sticky=tkinter.W, padx=90)
 ftp_close.grid(column=1, row=4, sticky=tkinter.E, padx=90)
+disp_info.grid(column=1, row=5, sticky=tkinter.S, padx=90)
 
 # 配置設定
 main_win.columnconfigure(0, weight=1)
