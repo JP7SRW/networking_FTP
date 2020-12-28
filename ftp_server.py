@@ -4,13 +4,15 @@ import pyftpdlib.handlers
 import pyftpdlib.servers
 import sys
 
+ip_address = # your NIC's ip address
+port = # free (21 is default value)
 # コマンドライン引数の判断
 args = sys.argv
 argvlen =len(sys.argv)
-if argvlen > 0:
+if argvlen > 1:
     directory = args[1]
-if argvlen < 1:
-    directory = 'C:/Users/shou/Desktop/programming/network_programming'
+if argvlen < 2:
+    directory = 'C:\\Users\\akira\\Desktop\\network_ftp'
 
 # 認証ユーザーを作る
 authorizer = pyftpdlib.authorizers.DummyAuthorizer()
@@ -21,5 +23,5 @@ handler = pyftpdlib.handlers.FTPHandler
 handler.authorizer = authorizer
 
 # FTPサーバーを立ち上げる
-server = pyftpdlib.servers.FTPServer(("127.0.0.1", 21), handler)
+server = pyftpdlib.servers.FTPServer((ip_address, port), handler)
 server.serve_forever()
