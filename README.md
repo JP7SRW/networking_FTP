@@ -6,4 +6,4 @@ FTPは暗号化をせずに通信します．想定用途外でのファイル�
 本ソフトウェアの利用に際し受けた損害についての責任は，一切負いかねますので予めご了承ください．
 
 # Requirement
-pip install piftpdlib
+pip install pyftpdlib
