@@ -11,7 +11,6 @@ from tkinter import messagebox
 from tkinter import ttk
 
 server_flag = False
-#client_flag = False
 
 def server_window():
     server_win = tk.Toplevel()
