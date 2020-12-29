@@ -95,7 +95,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("500x400")
+main_win.geometry("600x300")
 
 #テーマ設定
 ttk.Style().theme_use("classic")
@@ -118,12 +118,16 @@ nb.pack(fill='both',expand=1)
 
 #自IP表示
 ip_label = ttk.Label(tab1, text="自IPアドレス :")
-ip_label.grid(column=0, row=0, pady=5)
+ip_label.grid(column=0, row=0, sticky=tk.W,pady=5)
 
 ip_list = socket.gethostbyname_ex(socket.gethostname())[2] #サーバ機の持つIPアドレスのリストを取得
 combo = ttk.Combobox(tab1, state='readonly', values=ip_list)
 combo.set(ip_list[0])
-combo.grid(column=1, row=0, pady=5)
+combo.grid(column=1, row=0, sticky=tk.W,pady=5)
+
+if len(ip_list)>1:
+    ip_label = ttk.Label(tab1, text="※ファイル共有先のLANに属するIPアドレスを選択")
+    ip_label.grid(column=2, row=0, sticky=tk.W,pady=5)
 
 #ポート関係
 port_label = ttk.Label(tab1, text="ポート番号 :")
@@ -147,7 +151,7 @@ folder_box.grid(column=1, row=2, sticky=tk.EW, padx=5)
 folder_box.insert(0, os.path.realpath('.'))
 
 folder_btn = ttk.Button(tab1, text="参照", command = folder)
-folder_btn.grid(column=2, row=2)
+folder_btn.grid(column=2, row=2, sticky=tk.W)
 
 #認証選択関係
 def entry_on():
