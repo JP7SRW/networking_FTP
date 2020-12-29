@@ -1,18 +1,21 @@
 # -*- coding: utf8 -*-
+
+import ftplib
 from ftplib import FTP
+
 host = '127.0.0.1'
+port = 21
 user = 'user'
 password = 'password'
-file_name = 'test.txt'
 
-print("--Starting FTP Client--")
+# FTPオブジェクトをインスタンス化
+ftp = FTP()
 
-ftp = FTP(host, user, password)
-files = ftp.nlst()
+# FTPサーバに接続
+ftp.connect(host, port)
+#FTPサーバにログイン
+ftp.login(user, password)
+# FTPサーバのファイル一覧を取得
+files = ftp.nlst("/dir")
 print(files)
-
-with open(file_name, 'wb') as f:
-    ftp.retrbinary('RETR ' + file_name, f.write)
-
-print("--Closing FTP Client--")
 ftp.close()
