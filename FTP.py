@@ -6,6 +6,7 @@ import tkinter as tk
 import os
 import threading
 import socket
+from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
@@ -81,6 +82,9 @@ def exit_button():
                                 \nFTPで通信中の場合、通信も終了されます"):
         stop()
 
+def select_ip():
+    ip = combo.get()
+
 #スレッディング宣言
 theread1 = threading.Thread(target=server_open)
 theread1.setDaemon(True)
@@ -92,7 +96,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("500x400")
+main_win.geometry("800x400")
 
 #テーマ設定
 ttk.Style().theme_use("classic")
@@ -114,7 +118,16 @@ nb.pack(fill='both',expand=1)
 #------以下tab1関係-------
 
 #自IP表示
-ip = socket.gethostbyname(socket.gethostname())
+ip_list = socket.gethostbyname_ex(socket.gethostname())[2] #サーバ機の持つIPアドレスのリストを取得
+if len(ip_list)>1:
+    combo = ttk.Combobox(tab1, state='readonly', values=ip_list)
+    combo.set(ip_list[0])
+    combo.grid(column=2, row=0)
+    button = ttk.Button(tab1, text='IPアドレス決定', command=select_ip)
+    ip = combo.get() # 使用するIPアドレスを選択
+    button.grid(column=3,row=0)
+else:
+    ip = socket.gethostbyname(socket.gethostname())
 ip_label = ttk.Label(tab1, text="自IPアドレス :")
 ip_label.grid(column=0, row=0, pady=5)
 ttk.Label(tab1, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
