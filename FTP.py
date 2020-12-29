@@ -30,6 +30,7 @@ def server_open():
 
     server_window()
 
+    global server_flag
     server_flag = True
 
     port = port_box.get()
@@ -55,7 +56,7 @@ def client():
 
 #FTP&プログラム終了関数
 def stop():
-    if server_flag == True:
+    if (server_flag):
         server.close_all()
     exit()
 
