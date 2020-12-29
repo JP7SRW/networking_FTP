@@ -26,6 +26,8 @@ def server_window():
     ftp_close = ttk.Button(server_frm, text="終了", command = stop)
     ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
 
+    server_win.protocol("WM_DELETE_WINDOW", exit_button)
+
 def server_open():
 
     server_window()
@@ -62,13 +64,13 @@ def stop():
 
 #windows側終了ボタン押下時関数
 def exit_button():
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+    if messagebox.askokcancel("確認","プログラムを終了してもいいですか？\
+                                \nFTPで通信中の場合、通信も終了されます"):
         stop()
 
 #スレッディング宣言
 theread1 = threading.Thread(target=server_open)
 theread1.setDaemon(True)
-theread2 = threading.Thread(target=server_window)
 
 #メインウィンドウを作成
 main_win = tk.Tk()
