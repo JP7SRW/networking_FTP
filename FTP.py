@@ -12,22 +12,34 @@ from tkinter import ttk
 
 server_flag = False
 
+#サーバ起動時のウィンドウ起動関数
 def server_window():
+    #main_winの子ウィンドウとしてserver_winを作成
     server_win = tk.Toplevel()
+
+    #サーバウィンドウのタイトルを変更
     server_win.title("サーバ管理ウィンドウ")
+
+    #サーバウィンドウのサイズを変更
     server_win.geometry("200x100")
+
+    #サーバウィンドウにフレームを作成・配置
     server_frm = ttk.Frame(server_win)
     server_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
+    #自IP表示
     ip_label = ttk.Label(server_frm, text="自IPアドレス :")
     ip_label.grid(column=0, row=0, sticky=tk.W, pady=5)
     ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
 
+    #終了ボタン作成・配置
     ftp_close = ttk.Button(server_frm, text="終了", command = stop)
     ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
 
+    #windows側終了ボタン押下時関数呼び出し
     server_win.protocol("WM_DELETE_WINDOW", exit_button)
 
+#サーバ起動関数
 def server_open():
 
     server_window()
@@ -53,6 +65,7 @@ def server_open():
     server = pyftpdlib.servers.FTPServer((ip, port), handler)
     server.serve_forever()
 
+#クライアント起動関数
 def client():
     pass
 
