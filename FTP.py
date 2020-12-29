@@ -29,6 +29,7 @@ def server_window():
     server_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
     #自IP表示
+    ip = combo.get()
     ip_label = ttk.Label(server_frm, text="自IPアドレス :")
     ip_label.grid(column=0, row=0, sticky=tk.W, pady=5)
     ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
@@ -48,6 +49,7 @@ def server_open():
     global server_flag
     server_flag = True
 
+    ip = combo.get()
     port = port_box.get()
     user = user_box.get()
     password = password_box.get()
@@ -82,9 +84,6 @@ def exit_button():
                                 \nFTPで通信中の場合、通信も終了されます"):
         stop()
 
-def select_ip():
-    ip = combo.get()
-
 #スレッディング宣言
 theread1 = threading.Thread(target=server_open)
 theread1.setDaemon(True)
@@ -96,7 +95,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("800x400")
+main_win.geometry("500x400")
 
 #テーマ設定
 ttk.Style().theme_use("classic")
@@ -118,19 +117,13 @@ nb.pack(fill='both',expand=1)
 #------以下tab1関係-------
 
 #自IP表示
-ip_list = socket.gethostbyname_ex(socket.gethostname())[2] #サーバ機の持つIPアドレスのリストを取得
-if len(ip_list)>1:
-    combo = ttk.Combobox(tab1, state='readonly', values=ip_list)
-    combo.set(ip_list[0])
-    combo.grid(column=2, row=0)
-    button = ttk.Button(tab1, text='IPアドレス決定', command=select_ip)
-    ip = combo.get() # 使用するIPアドレスを選択
-    button.grid(column=3,row=0)
-else:
-    ip = socket.gethostbyname(socket.gethostname())
 ip_label = ttk.Label(tab1, text="自IPアドレス :")
 ip_label.grid(column=0, row=0, pady=5)
-ttk.Label(tab1, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
+
+ip_list = socket.gethostbyname_ex(socket.gethostname())[2] #サーバ機の持つIPアドレスのリストを取得
+combo = ttk.Combobox(tab1, state='readonly', values=ip_list)
+combo.set(ip_list[0])
+combo.grid(column=1, row=0, pady=5)
 
 #ポート関係
 port_label = ttk.Label(tab1, text="ポート番号 :")
