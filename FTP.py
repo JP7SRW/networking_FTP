@@ -189,7 +189,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("500x400")
+main_win.geometry("600x400")
 
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
