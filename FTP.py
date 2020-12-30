@@ -91,6 +91,9 @@ theread1.setDaemon(True)
 #メインウィンドウを作成
 main_win = tk.Tk()
 
+#ウィンドウアイコンの設定
+main_win.iconbitmap('soft_ico.ico')
+
 #メインウィンドウのタイトルを変更
 main_win.title("ふぁいる共有ソフト")
 
