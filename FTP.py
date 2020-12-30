@@ -100,18 +100,36 @@ def client_window():
     client_frm = ttk.Frame(client_win)
     client_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
+    #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
+        dl_directory = dl_folder_box_s.get()
         for i in lb.curselection():
-            print(str(i)+"番目を選択中")
-        print("")
+            with open(dl_directory + '/' + files[i], 'wb') as f:
+                ftp.retrbinary('RETR ' + files[i], f.write)
 
     #サーバ側のファイルの一覧取得
     files = ftp.nlst(".")
     txt = tk.StringVar(value=files)
-    lb = tk.Listbox(client_frm, listvariable=txt, width=30, height=6)
+    lb = tk.Listbox(client_frm, listvariable=txt, width=60, height=16)
     lb.bind("<<ListboxSelect>>", select_lb)
     lb.grid(column=0, row=0)
     lb.configure(selectmode="extended")
+
+    #フォルダー選択関係
+    def dl_folder():
+        dl_path = filedialog.askdirectory()
+        dl_folder_path.set(dl_path)
+
+    dl_folder_path = tk.StringVar()
+    dl_folder_label_s = ttk.Label(client_frm, text="フォルダ指定 :")
+    dl_folder_label_s.grid(column=0, row=1, pady=5)
+
+    dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
+    dl_folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
+    dl_folder_box_s.insert(0, os.path.realpath('./download'))
+
+    dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
+    dl_folder_btn_s.grid(column=2, row=2)
 
     #スクロールバーの作成・配置
     scrollbar = ttk.Scrollbar(client_frm,orient=tk.VERTICAL,command=lb.yview)
@@ -119,7 +137,7 @@ def client_window():
 
     #終了ボタンの作成・配置
     ftp_close = ttk.Button(client_frm, text="終了", command = stop)
-    ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
+    ftp_close.grid(column=0, row=i+2, sticky=tk.W, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
     client_win.protocol("WM_DELETE_WINDOW", exit_button)
@@ -176,7 +194,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("500x400")
+main_win.geometry("600x400")
 
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
