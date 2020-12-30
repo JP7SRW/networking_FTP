@@ -199,6 +199,8 @@ password_box.insert(0, "password")
 ftp_open = ttk.Button(tab1, text="起動", command=theread1.start)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
 
+main_win.bind("<Return>",lambda event: theread1.start())
+
 #------以上tab1関係-------
 
 #------以下tab2関係-------
