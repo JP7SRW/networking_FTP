@@ -100,7 +100,7 @@ def client_window():
     client_win.title("クライアント管理ウィンドウ")
 
     #サーバウィンドウのサイズを変更
-    client_win.geometry("600x500")
+    client_win.geometry("620x400")
 
     #ウィンドウアイコンの設定
     client_win.iconbitmap("soft_ico.ico")
@@ -138,12 +138,14 @@ def client_window():
             #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
 
+    lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
+    lb_label.grid(column=0, row=0, pady=5, sticky=N)
     #サーバ側のファイルの一覧取得
     files = ftp.nlst(".")
     txt = tk.StringVar(value=files)
-    lb = tk.Listbox(client_frm, listvariable=txt, width=40, height=16)
+    lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
     lb.bind("<<ListboxSelect>>", select_lb)
-    lb.grid(column=0, row=0)
+    lb.grid(column=1, row=0)
     lb.configure(selectmode="extended")
 
     #フォルダー選択関係
@@ -164,7 +166,7 @@ def client_window():
 
     #スクロールバーの作成・配置
     scrollbar = ttk.Scrollbar(client_frm,orient=tk.VERTICAL,command=lb.yview)
-    scrollbar.grid(column=1, row=0, sticky=tk.NS)
+    scrollbar.grid(column=2, row=0, sticky=tk.NS)
 
     #終了ボタンの作成・配置
     ftp_close = ttk.Button(client_frm, text="終了", command = stop)
