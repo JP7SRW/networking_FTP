@@ -21,6 +21,11 @@ client_flag = False
 #サーバ起動時のウィンドウ起動関数
 def server_window():
 
+    def stop_s():
+        server.close_all()
+        server_win.destroy()
+        ftp_open.config(state = tk.NORMAL)
+
     #main_winの子ウィンドウとしてserver_winを作成
     server_win = tk.Toplevel()
 
@@ -44,7 +49,7 @@ def server_window():
     ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
 
     #終了ボタン作成・配置
-    ftp_close = ttk.Button(server_frm, text="終了", command = stop)
+    ftp_close = ttk.Button(server_frm, text="終了", command = stop_s)
     ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
@@ -87,6 +92,11 @@ def server_open():
 #クライアント起動時のウィンドウ起動関数
 def client_window():
 
+    def stop_c():
+        ftp.close()
+        client_win.destroy()
+        ftp_connect.config(state = tk.NORMAL)
+
     client_win = tk.Toplevel()
 
     #サーバウィンドウのタイトルを変更
@@ -119,22 +129,22 @@ def client_window():
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
             #ファイルサイズを取得
-            ftp.voidcmd('TYPE I')
+            ftp.voidcmd("TYPE I")
             size = ftp.size(files[i])
 
             #各種ウィジェット(ファイル名，ダウンロード先，サイズ)を表示
-            nowload_filename = ttk.Label(nowload_frm, text='ダウンロードするファイル: ' + files[i])
+            nowload_filename = ttk.Label(nowload_frm, text="ダウンロードするファイル: " + files[i])
             nowload_filename.grid(column=0, row=0, pady=5, sticky=tk.W)
 
-            nowload_filename = ttk.Label(nowload_frm, text='ダウンロード先: ' + dl_directory)
+            nowload_filename = ttk.Label(nowload_frm, text="ダウンロード先: " + dl_directory)
             nowload_filename.grid(column=0, row=1, pady=5, sticky=tk.W)
 
-            nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ:    {}[byte]'.format(size))
+            nowload_filesize = ttk.Label(nowload_frm, text="ファイルサイズ:    {}[byte]".format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
 
             #ファイルをバイナリ転送モードで取得
-            with open(dl_directory + '\\' + files[i], 'wb') as f:
-                ftp.retrbinary('RETR ' + files[i], f.write)
+            with open(dl_directory + "\\" + files[i], "wb") as f:
+                ftp.retrbinary("RETR " + files[i], f.write)
             #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
     lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
@@ -167,7 +177,7 @@ def client_window():
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
     dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
-    dl_folder_box_s.insert(0, os.path.realpath('./download'))
+    dl_folder_box_s.insert(0, os.path.realpath("./download"))
 
     dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
     dl_folder_btn_s.grid(column=2, row=1)
@@ -177,7 +187,7 @@ def client_window():
     scrollbar.grid(column=2, row=0, sticky=tk.NS)
 
     #終了ボタンの作成・配置
-    ftp_close = ttk.Button(client_frm, text="終了", command = stop)
+    ftp_close = ttk.Button(client_frm, text="終了", command = stop_c)
     ftp_close.grid(column=1, row=2, sticky=tk.N, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
@@ -186,6 +196,9 @@ def client_window():
 
 #クライアント起動関数
 def client_connect():
+
+    global client_flag
+    client_flag = True
 
     ip = ip_box_c.get()
     #TODO: 何故かportだけintにキャストしないとエラーになる
@@ -219,7 +232,7 @@ def stop():
 #windows側終了ボタン押下時関数
 def exit_button():
     if messagebox.askokcancel("確認","プログラムを終了してもよろしいですか？\
-                                \nFTPで通信中の場合、通信も終了されます。"):
+                            \nFTPで通信中の場合、サーバとクライアントの両方が終了されます。"):
         stop()
 
 #時計を表示
@@ -230,10 +243,18 @@ def change_label_text():
         time.sleep(1)
 
 #スレッディング宣言
-theread1 = threading.Thread(target=server_open)
-theread1.setDaemon(True)
-theread2 = threading.Thread(target=client_connect)
-theread2.setDaemon(True)
+def start_theread1():
+    ftp_open.config(state = tk.DISABLED)
+    theread1 = threading.Thread(target=server_open)
+    theread1.setDaemon(True)
+    theread1.start()
+
+def start_theread2():
+    ftp_connect.config(state = tk.DISABLED)
+    theread2 = threading.Thread(target=client_connect)
+    theread2.setDaemon(True)
+    theread2.start()
+
 theread3 = threading.Thread(target=change_label_text)
 theread3.setDaemon(True)
 
@@ -264,7 +285,7 @@ nb.add(tab1, text="サーバ", padding=3)
 nb.add(tab2, text="クライアント", padding=3)
 
 #メインウィンドウにノートブックを配置
-nb.pack(fill='both',expand=1)
+nb.pack(fill="both",expand=1)
 
 #------以下tab1関係-------
 
@@ -274,7 +295,7 @@ ip_label_s.grid(column=0, row=0, sticky=tk.E,pady=5)
 
 #サーバ機の持つIPアドレスのリストを取得
 ip_list = socket.gethostbyname_ex(socket.gethostname())[2]
-combo = ttk.Combobox(tab1, state='readonly', values=ip_list)
+combo = ttk.Combobox(tab1, state="readonly", values=ip_list)
 combo.set(ip_list[0])
 combo.grid(column=1, row=0, sticky=tk.W, padx=5)
 
@@ -301,7 +322,7 @@ folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
 folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
-folder_box_s.insert(0, os.path.realpath('.'))
+folder_box_s.insert(0, os.path.realpath("."))
 
 folder_btn_s = ttk.Button(tab1, text="参照", command = folder)
 folder_btn_s.grid(column=2, row=2)
@@ -345,7 +366,7 @@ login_anonymous_btn_c = tk.Checkbutton(tab1, variable=auth_value,
 login_anonymous_btn_c.grid(column=0, row=5, pady=10)
 
 #起動ボタン関係
-ftp_open = ttk.Button(tab1, text="起動", command=theread1.start)
+ftp_open = ttk.Button(tab1, text="起動", command=start_theread1)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
 
 #時計スタート
@@ -407,7 +428,7 @@ login_anonymous_btn_c = tk.Checkbutton(tab2, variable=login_value,
 login_anonymous_btn_c.grid(column=0, row=6, pady=10)
 
 #起動ボタン関係
-ftp_connect = ttk.Button(tab2, text="接続", command=theread2.start)
+ftp_connect = ttk.Button(tab2, text="接続", command=start_theread2)
 ftp_connect.grid(column=1, row=7, sticky=tk.W, padx=90)
 
 #------以上tab2関係-------
