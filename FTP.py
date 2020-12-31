@@ -50,13 +50,6 @@ def server_window():
     #windows側終了ボタン押下時関数呼び出し
     server_win.protocol("WM_DELETE_WINDOW", exit_button)
 
-#時計を表示
-def changeLabelText():
-    while True:
-        clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
-        time.sleep(1)
-
 #サーバ起動関数
 def server_open():
 
@@ -130,13 +123,12 @@ def client_window():
             nowload_filename = ttk.Label(nowload_frm, text='ダウンロード先: ' + dl_directory)
             nowload_filename.grid(column=0, row=1, pady=5, sticky=tk.W)
 
-            nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ: {}[byte]'.format(size))
+            nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ:    {}[byte]'.format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
             #ファイルをバイナリ転送モードで取得
             with open(dl_directory + '\\' + files[i], 'wb') as f:
                 ftp.retrbinary('RETR ' + files[i], f.write)
             #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
-
 
     lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
     lb_label.grid(column=0, row=0, pady=5, sticky=N)
@@ -214,12 +206,19 @@ def exit_button():
                                 \nFTPで通信中の場合、通信も終了されます。"):
         stop()
 
+#時計を表示
+def change_label_text():
+    while True:
+        clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
+        time.sleep(1)
+
 #スレッディング宣言
 theread1 = threading.Thread(target=server_open)
 theread1.setDaemon(True)
 theread2 = threading.Thread(target=client_connect)
 theread2.setDaemon(True)
-theread3 = threading.Thread(target=changeLabelText)
+theread3 = threading.Thread(target=change_label_text)
 theread3.setDaemon(True)
 
 #メインウィンドウを作成
