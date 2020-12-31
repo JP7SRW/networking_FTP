@@ -255,7 +255,7 @@ nb.pack(fill='both',expand=1)
 
 #自IP表示
 ip_label_s = ttk.Label(tab1, text="自IPアドレス :")
-ip_label_s.grid(column=0, row=0, sticky=tk.W,pady=5)
+ip_label_s.grid(column=0, row=0, sticky=tk.E,pady=5)
 
 #サーバ機の持つIPアドレスのリストを取得
 ip_list = socket.gethostbyname_ex(socket.gethostname())[2]
@@ -269,7 +269,7 @@ if len(ip_list)>1:
 
 #ポート関係
 port_label_s = ttk.Label(tab1, text="ポート番号 :")
-port_label_s.grid(column=0, row=1, pady=5)
+port_label_s.grid(column=0, row=1,sticky=tk.E, pady=5)
 
 port_box_s = ttk.Entry(tab1)
 port_box_s.grid(column=1, row=1, sticky=tk.W,padx=5)
@@ -282,7 +282,7 @@ def folder():
 
 folder_path = tk.StringVar()
 folder_label_s = ttk.Label(tab1, text="フォルダ指定 :")
-folder_label_s.grid(column=0, row=2, pady=5)
+folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
 folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
@@ -293,14 +293,14 @@ folder_btn_s.grid(column=2, row=2)
 
 #ユーザー選択関係
 user_label_s = ttk.Label(tab1, text="ユーザー :")
-user_label_s.grid(column=0, row=3, pady=10)
+user_label_s.grid(column=0, row=3, sticky=tk.E, pady=10)
 user_box_s = ttk.Entry(tab1)
 user_box_s.grid(column=1, row=3, sticky=tk.EW, padx=5)
 user_box_s.insert(0, "user")
 
 #パスワード選択関係
 password_label_s = ttk.Label(tab1, text="パスワード :")
-password_label_s.grid(column=0, row=4, pady=10)
+password_label_s.grid(column=0, row=4, sticky=tk.E, pady=10)
 password_box_s = ttk.Entry(tab1)
 password_box_s.grid(column=1, row=4, sticky=tk.EW, padx=5)
 password_box_s.insert(0, "password")
