@@ -210,8 +210,8 @@ def stop():
 
 #windows側終了ボタン押下時関数
 def exit_button():
-    if messagebox.askokcancel("確認","プログラムを終了してもいいですか？\
-                                \nFTPで通信中の場合、通信も終了されます"):
+    if messagebox.askokcancel("確認","プログラムを終了してもよろしいですか？\
+                                \nFTPで通信中の場合、通信も終了されます。"):
         stop()
 
 #スレッディング宣言
@@ -229,7 +229,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("600x400")
+main_win.geometry("650x400")
 
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
@@ -264,8 +264,8 @@ combo.set(ip_list[0])
 combo.grid(column=1, row=0, sticky=tk.W, padx=5)
 
 if len(ip_list)>1:
-    ip_label = ttk.Label(tab1, text="※ファイル共有先のLANに属するIPアドレスを選択")
-    ip_label.grid(column=2, row=0, sticky=tk.W,pady=5)
+    ip_label = ttk.Label(tab1, text="※ファイル共有先のLANに属するIPアドレスを選択してください")
+    ip_label.grid(column=2, row=0, sticky=tk.E,pady=5)
 
 #ポート関係
 port_label_s = ttk.Label(tab1, text="ポート番号 :")
