@@ -113,20 +113,17 @@ def client_window():
     def select_lb(event):
         dl_directory = dl_folder_box_s.get()
         for i in lb.curselection():
+            #ダウンロード進行中のホップアップを出す
             nowload_win = tk.Toplevel()
-            #サーバウィンドウのタイトルを変更
             nowload_win.title("ダウンロードしています...")
-            #サーバウィンドウのサイズを変更
             nowload_win.geometry("400x100")
-            #ウィンドウアイコンの設定
             nowload_win.iconbitmap("soft_ico.ico")
-            #サーバウィンドウにフレームを作成・配置
             nowload_frm = ttk.Frame(nowload_win)
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
-
+            #ファイルサイズを取得
             ftp.voidcmd('TYPE I')
             size = ftp.size(files[i])
-            
+            #各種ウィジェット(ファイル名，ダウンロード先，サイズ)を表示
             nowload_filename = ttk.Label(nowload_frm, text='ダウンロードするファイル: ' + files[i])
             nowload_filename.grid(column=0, row=0, pady=5, sticky=tk.W)
 
@@ -135,9 +132,10 @@ def client_window():
 
             nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ: {}[byte]'.format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
-
+            #ファイルをバイナリ転送モードで取得
             with open(dl_directory + '\\' + files[i], 'wb') as f:
                 ftp.retrbinary('RETR ' + files[i], f.write)
+            #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
 
     #サーバ側のファイルの一覧取得
