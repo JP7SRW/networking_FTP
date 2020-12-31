@@ -21,7 +21,7 @@ client_flag = False
 #サーバ起動時のウィンドウ起動関数
 def server_window():
 
-    def stop_s():
+    def stop_server():
         server.close_all()
         server_win.destroy()
         ftp_open.config(state = tk.NORMAL)
@@ -49,7 +49,7 @@ def server_window():
     ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
 
     #終了ボタン作成・配置
-    ftp_close = ttk.Button(server_frm, text="終了", command = stop_s)
+    ftp_close = ttk.Button(server_frm, text="終了", command = stop_server)
     ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
@@ -92,7 +92,7 @@ def server_open():
 #クライアント起動時のウィンドウ起動関数
 def client_window():
 
-    def stop_c():
+    def stop_client():
         ftp.close()
         client_win.destroy()
         ftp_connect.config(state = tk.NORMAL)
@@ -187,7 +187,7 @@ def client_window():
     scrollbar.grid(column=2, row=0, sticky=tk.NS)
 
     #終了ボタンの作成・配置
-    ftp_close = ttk.Button(client_frm, text="終了", command = stop_c)
+    ftp_close = ttk.Button(client_frm, text="終了", command = stop_client)
     ftp_close.grid(column=1, row=2, sticky=tk.N, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
