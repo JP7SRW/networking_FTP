@@ -100,7 +100,7 @@ def client_window():
     client_win.title("クライアント管理ウィンドウ")
 
     #サーバウィンドウのサイズを変更
-    client_win.geometry("600x500")
+    client_win.geometry("620x400")
 
     #ウィンドウアイコンの設定
     client_win.iconbitmap("soft_ico.ico")
@@ -113,15 +113,39 @@ def client_window():
     def select_lb(event):
         dl_directory = dl_folder_box_s.get()
         for i in lb.curselection():
-            with open(dl_directory + '/' + files[i], 'wb') as f:
-                ftp.retrbinary('RETR ' + files[i], f.write)
+            #ダウンロード進行中のホップアップを出す
+            nowload_win = tk.Toplevel()
+            nowload_win.title("ダウンロードしています...")
+            nowload_win.geometry("400x100")
+            nowload_win.iconbitmap("soft_ico.ico")
+            nowload_frm = ttk.Frame(nowload_win)
+            nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
+            #ファイルサイズを取得
+            ftp.voidcmd('TYPE I')
+            size = ftp.size(files[i])
+            #各種ウィジェット(ファイル名，ダウンロード先，サイズ)を表示
+            nowload_filename = ttk.Label(nowload_frm, text='ダウンロードするファイル: ' + files[i])
+            nowload_filename.grid(column=0, row=0, pady=5, sticky=tk.W)
 
+            nowload_filename = ttk.Label(nowload_frm, text='ダウンロード先: ' + dl_directory)
+            nowload_filename.grid(column=0, row=1, pady=5, sticky=tk.W)
+
+            nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ: {}[byte]'.format(size))
+            nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
+            #ファイルをバイナリ転送モードで取得
+            with open(dl_directory + '\\' + files[i], 'wb') as f:
+                ftp.retrbinary('RETR ' + files[i], f.write)
+            #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
+
+
+    lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
+    lb_label.grid(column=0, row=0, pady=5, sticky=N)
     #サーバ側のファイルの一覧取得
     files = ftp.nlst(".")
     txt = tk.StringVar(value=files)
-    lb = tk.Listbox(client_frm, listvariable=txt, width=60, height=16)
+    lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
     lb.bind("<<ListboxSelect>>", select_lb)
-    lb.grid(column=0, row=0)
+    lb.grid(column=1, row=0)
     lb.configure(selectmode="extended")
 
     #フォルダー選択関係
@@ -134,19 +158,19 @@ def client_window():
     dl_folder_label_s.grid(column=0, row=1, pady=5)
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
-    dl_folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
+    dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
     dl_folder_box_s.insert(0, os.path.realpath('./download'))
 
     dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
-    dl_folder_btn_s.grid(column=2, row=2)
+    dl_folder_btn_s.grid(column=2, row=1)
 
     #スクロールバーの作成・配置
     scrollbar = ttk.Scrollbar(client_frm,orient=tk.VERTICAL,command=lb.yview)
-    scrollbar.grid(column=1, row=0, sticky=tk.NS)
+    scrollbar.grid(column=2, row=0, sticky=tk.NS)
 
     #終了ボタンの作成・配置
     ftp_close = ttk.Button(client_frm, text="終了", command = stop)
-    ftp_close.grid(column=0, row=i+2, sticky=tk.W, padx=5)
+    ftp_close.grid(column=1, row=2, sticky=tk.N, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
     client_win.protocol("WM_DELETE_WINDOW", exit_button)
@@ -231,7 +255,7 @@ nb.pack(fill='both',expand=1)
 
 #自IP表示
 ip_label_s = ttk.Label(tab1, text="自IPアドレス :")
-ip_label_s.grid(column=0, row=0, sticky=tk.W,pady=5)
+ip_label_s.grid(column=0, row=0, sticky=tk.E,pady=5)
 
 #サーバ機の持つIPアドレスのリストを取得
 ip_list = socket.gethostbyname_ex(socket.gethostname())[2]
@@ -245,7 +269,7 @@ if len(ip_list)>1:
 
 #ポート関係
 port_label_s = ttk.Label(tab1, text="ポート番号 :")
-port_label_s.grid(column=0, row=1, pady=5)
+port_label_s.grid(column=0, row=1,sticky=tk.E, pady=5)
 
 port_box_s = ttk.Entry(tab1)
 port_box_s.grid(column=1, row=1, sticky=tk.W,padx=5)
@@ -258,7 +282,7 @@ def folder():
 
 folder_path = tk.StringVar()
 folder_label_s = ttk.Label(tab1, text="フォルダ指定 :")
-folder_label_s.grid(column=0, row=2, pady=5)
+folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
 folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
@@ -269,14 +293,14 @@ folder_btn_s.grid(column=2, row=2)
 
 #ユーザー選択関係
 user_label_s = ttk.Label(tab1, text="ユーザー :")
-user_label_s.grid(column=0, row=3, pady=10)
+user_label_s.grid(column=0, row=3, sticky=tk.E, pady=10)
 user_box_s = ttk.Entry(tab1)
 user_box_s.grid(column=1, row=3, sticky=tk.EW, padx=5)
 user_box_s.insert(0, "user")
 
 #パスワード選択関係
 password_label_s = ttk.Label(tab1, text="パスワード :")
-password_label_s.grid(column=0, row=4, pady=10)
+password_label_s.grid(column=0, row=4, sticky=tk.E, pady=10)
 password_box_s = ttk.Entry(tab1)
 password_box_s.grid(column=1, row=4, sticky=tk.EW, padx=5)
 password_box_s.insert(0, "password")
