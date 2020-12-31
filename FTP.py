@@ -12,6 +12,8 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 from ftplib import FTP
+import datetime
+import time
 
 server_flag = False
 client_flag = False
@@ -47,6 +49,13 @@ def server_window():
 
     #windows側終了ボタン押下時関数呼び出し
     server_win.protocol("WM_DELETE_WINDOW", exit_button)
+
+#時計を表示
+def changeLabelText():
+    while True:
+        clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
+        time.sleep(1)
 
 #サーバ起動関数
 def server_open():
@@ -186,6 +195,8 @@ theread1 = threading.Thread(target=server_open)
 theread1.setDaemon(True)
 theread2 = threading.Thread(target=client_connect)
 theread2.setDaemon(True)
+theread3 = threading.Thread(target=changeLabelText)
+theread3.setDaemon(True)
 
 #メインウィンドウを作成
 main_win = tk.Tk()
@@ -297,6 +308,9 @@ login_anonymous_btn_c.grid(column=0, row=5, pady=10)
 #起動ボタン関係
 ftp_open = ttk.Button(tab1, text="起動", command=theread1.start)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
+
+#時計スタート
+theread3.start()
 
 #------以上tab1関係-------
 
