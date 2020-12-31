@@ -104,8 +104,12 @@ def client_window():
 
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
+
+        #ダウンロードディレクトリを取得
         dl_directory = dl_folder_box_s.get()
+        #リストボックスの選択されている項目を取得
         for i in lb.curselection():
+
             #ダウンロード進行中のホップアップを出す
             nowload_win = tk.Toplevel()
             nowload_win.title("ダウンロードしています...")
@@ -113,9 +117,11 @@ def client_window():
             nowload_win.iconbitmap("soft_ico.ico")
             nowload_frm = ttk.Frame(nowload_win)
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
+
             #ファイルサイズを取得
             ftp.voidcmd('TYPE I')
             size = ftp.size(files[i])
+
             #各種ウィジェット(ファイル名，ダウンロード先，サイズ)を表示
             nowload_filename = ttk.Label(nowload_frm, text='ダウンロードするファイル: ' + files[i])
             nowload_filename.grid(column=0, row=0, pady=5, sticky=tk.W)
@@ -125,20 +131,30 @@ def client_window():
 
             nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ:    {}[byte]'.format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
+
             #ファイルをバイナリ転送モードで取得
             with open(dl_directory + '\\' + files[i], 'wb') as f:
                 ftp.retrbinary('RETR ' + files[i], f.write)
             #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
     lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
-    lb_label.grid(column=0, row=0, pady=5, sticky=N)
+    lb_label.grid(column=0, row=0, pady=5, sticky=tk.N)
+
     #サーバ側のファイルの一覧取得
     files = ftp.nlst(".")
+
+    #ファイル名を取得
     txt = tk.StringVar(value=files)
+
+    #リストボックス作成・設置
     lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
-    lb.bind("<<ListboxSelect>>", select_lb)
     lb.grid(column=1, row=0)
-    lb.configure(selectmode="extended")
+
+    #リストボックスの中身を選択したらselect_lbを実行
+    lb.bind("<<ListboxSelect>>", select_lb)
+
+    #リストボックス内の複数選択を可能にする
+    lb.configure(selectmode= tk.EXTENDED )
 
     #フォルダー選択関係
     def dl_folder():
@@ -341,13 +357,13 @@ theread3.start()
 
 #接続先IP関係
 ip_label_c = ttk.Label(tab2, text="接続先IPアドレス :")
-ip_label_c.grid(column=0, row=0, sticky=tk.W,pady=10)
+ip_label_c.grid(column=0, row=0, sticky=tk.E,pady=10)
 ip_box_c = ttk.Entry(tab2)
 ip_box_c.grid(column=1, row=0, sticky=tk.W,padx=5)
 
 #ポート関係
 port_label_c = ttk.Label(tab2, text="接続先ポート番号 :")
-port_label_c.grid(column=0, row=1, pady=5)
+port_label_c.grid(column=0, row=1, sticky=tk.E, pady=5)
 
 port_box_c = ttk.Entry(tab2)
 port_box_c.grid(column=1, row=1, sticky=tk.W,padx=5)
@@ -355,14 +371,14 @@ port_box_c.insert(0, "21")
 
 #ユーザー選択関係
 user_label_c = ttk.Label(tab2, text="ユーザー :")
-user_label_c.grid(column=0, row=4, pady=10)
+user_label_c.grid(column=0, row=4, sticky=tk.E, pady=10)
 user_box_c = ttk.Entry(tab2)
 user_box_c.grid(column=1, row=4, sticky=tk.EW, padx=5)
 user_box_c.insert(0, "user")
 
 #パスワード選択関係
 password_label_c = ttk.Label(tab2, text="パスワード :")
-password_label_c.grid(column=0, row=5, pady=10)
+password_label_c.grid(column=0, row=5, sticky=tk.E, pady=10)
 password_box_c = ttk.Entry(tab2)
 password_box_c.grid(column=1, row=5, sticky=tk.EW, padx=5)
 password_box_c.insert(0, "password")
