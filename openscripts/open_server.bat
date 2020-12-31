@@ -1,4 +1,4 @@
 cd %~dp0
 cd ../.
-python ftp_server_prototype.py
+python FTP.py
 pause

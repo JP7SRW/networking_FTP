@@ -12,6 +12,8 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 from ftplib import FTP
+import datetime
+import time
 
 server_flag = False
 client_flag = False
@@ -48,6 +50,13 @@ def server_window():
     #windows側終了ボタン押下時関数呼び出し
     server_win.protocol("WM_DELETE_WINDOW", exit_button)
 
+#時計を表示
+def changeLabelText():
+    while True:
+        clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
+        time.sleep(1)
+
 #サーバ起動関数
 def server_open():
 
@@ -65,12 +74,12 @@ def server_open():
     # 認証ユーザーを作る
     authorizer = pyftpdlib.authorizers.DummyAuthorizer()
 
-    if radio_value.get() == 0:
-        #TODO : 権限をrのみに変える必要有?(現状は何でも出来てしまう)
-        authorizer.add_user(user, password, directory, perm="elradfmw")
-    elif radio_value.get() == 1:
+    if auth_value.get():
         #anonymous認証時
+        #TODO : 権限をrのみに変える必要有?(現状は何でも出来てしまう)
         authorizer.add_anonymous(directory, perm="elradfmw")
+    else:
+        authorizer.add_user(user, password, directory, perm="elradfmw")
 
     # 個々の接続を管理するハンドラーを作る
     handler = pyftpdlib.handlers.FTPHandler
@@ -91,7 +100,7 @@ def client_window():
     client_win.title("クライアント管理ウィンドウ")
 
     #サーバウィンドウのサイズを変更
-    client_win.geometry("300x200")
+    client_win.geometry("600x500")
 
     #ウィンドウアイコンの設定
     client_win.iconbitmap("soft_ico.ico")
@@ -100,18 +109,36 @@ def client_window():
     client_frm = ttk.Frame(client_win)
     client_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
+    #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
+        dl_directory = dl_folder_box_s.get()
         for i in lb.curselection():
-            print(str(i)+"番目を選択中")
-        print("")
+            with open(dl_directory + '/' + files[i], 'wb') as f:
+                ftp.retrbinary('RETR ' + files[i], f.write)
 
     #サーバ側のファイルの一覧取得
     files = ftp.nlst(".")
     txt = tk.StringVar(value=files)
-    lb = tk.Listbox(client_frm, listvariable=txt, width=30, height=6)
+    lb = tk.Listbox(client_frm, listvariable=txt, width=60, height=16)
     lb.bind("<<ListboxSelect>>", select_lb)
     lb.grid(column=0, row=0)
     lb.configure(selectmode="extended")
+
+    #フォルダー選択関係
+    def dl_folder():
+        dl_path = filedialog.askdirectory()
+        dl_folder_path.set(dl_path)
+
+    dl_folder_path = tk.StringVar()
+    dl_folder_label_s = ttk.Label(client_frm, text="フォルダ指定 :")
+    dl_folder_label_s.grid(column=0, row=1, pady=5)
+
+    dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
+    dl_folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
+    dl_folder_box_s.insert(0, os.path.realpath('./download'))
+
+    dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
+    dl_folder_btn_s.grid(column=2, row=2)
 
     #スクロールバーの作成・配置
     scrollbar = ttk.Scrollbar(client_frm,orient=tk.VERTICAL,command=lb.yview)
@@ -119,7 +146,7 @@ def client_window():
 
     #終了ボタンの作成・配置
     ftp_close = ttk.Button(client_frm, text="終了", command = stop)
-    ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
+    ftp_close.grid(column=0, row=i+2, sticky=tk.W, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
     client_win.protocol("WM_DELETE_WINDOW", exit_button)
@@ -140,7 +167,12 @@ def client_connect():
 
     #FTPサーバにログイン
     ftp.connect(ip,port)
-    ftp.login(user,password)
+
+    #匿名ログインの有無
+    if login_value.get():
+        ftp.login()
+    else:
+        ftp.login(user,password)
 
     client_window()
 
@@ -163,6 +195,8 @@ theread1 = threading.Thread(target=server_open)
 theread1.setDaemon(True)
 theread2 = threading.Thread(target=client_connect)
 theread2.setDaemon(True)
+theread3 = threading.Thread(target=changeLabelText)
+theread3.setDaemon(True)
 
 #メインウィンドウを作成
 main_win = tk.Tk()
@@ -171,7 +205,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("500x400")
+main_win.geometry("600x400")
 
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
@@ -233,48 +267,50 @@ folder_box_s.insert(0, os.path.realpath('.'))
 folder_btn_s = ttk.Button(tab1, text="参照", command = folder)
 folder_btn_s.grid(column=2, row=2)
 
-#認証選択関係
-def entry_on():
-    user_box_s.configure(state=tk.DISABLED)
-    password_box_s.configure(state=tk.DISABLED)
-
-def entry_off():
-    user_box_s.configure(state=tk.NORMAL)
-    password_box_s.configure(state=tk.NORMAL)
-
-radio_value = tk.IntVar()
-AuthSelect_label_s = ttk.Label(tab1, text="認証 :")
-AuthSelect_label_s.grid(column=0, row=3, padx=5)
-
-AuthSelect_on_btn_s = ttk.Radiobutton(tab1, text="あり",
-                                    variable=radio_value,
-                                    value=0,
-                                    command=entry_off)
-AuthSelect_on_btn_s.grid(column=1, row=3, sticky=tk.W, padx=5)
-
-AuthSelect_off_btn_s = ttk.Radiobutton(tab1, text="なし",
-                                    variable=radio_value,
-                                    value=1,
-                                    command=entry_on)
-AuthSelect_off_btn_s.grid(column=1, row=3, sticky=tk.W, padx=100)
-
 #ユーザー選択関係
 user_label_s = ttk.Label(tab1, text="ユーザー :")
-user_label_s.grid(column=0, row=4, pady=10)
+user_label_s.grid(column=0, row=3, pady=10)
 user_box_s = ttk.Entry(tab1)
-user_box_s.grid(column=1, row=4, sticky=tk.EW, padx=5)
+user_box_s.grid(column=1, row=3, sticky=tk.EW, padx=5)
 user_box_s.insert(0, "user")
 
 #パスワード選択関係
 password_label_s = ttk.Label(tab1, text="パスワード :")
-password_label_s.grid(column=0, row=5, pady=10)
+password_label_s.grid(column=0, row=4, pady=10)
 password_box_s = ttk.Entry(tab1)
-password_box_s.grid(column=1, row=5, sticky=tk.EW, padx=5)
+password_box_s.grid(column=1, row=4, sticky=tk.EW, padx=5)
 password_box_s.insert(0, "password")
+
+#認証選択関係
+def auth_change_state():
+    if auth_value.get():
+        user_box_s.delete(0, tk.END)
+        user_box_s.insert(0, "anonymous")
+        user_box_s.configure(state=tk.DISABLED)
+
+        password_box_s.delete(0, tk.END)
+        password_box_s.insert(0, "")
+        password_box_s.configure(state=tk.DISABLED)
+    else:
+        user_box_s.configure(state=tk.NORMAL)
+        user_box_s.delete(0, tk.END)
+        user_box_s.insert(0, "user")
+
+        password_box_s.configure(state=tk.NORMAL)
+        password_box_s.delete(0, tk.END)
+        password_box_s.insert(0, "password")
+
+auth_value = tk.BooleanVar()
+login_anonymous_btn_c = tk.Checkbutton(tab1, variable=auth_value,
+                                    text="匿名ログイン", command=auth_change_state)
+login_anonymous_btn_c.grid(column=0, row=5, pady=10)
 
 #起動ボタン関係
 ftp_open = ttk.Button(tab1, text="起動", command=theread1.start)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
+
+#時計スタート
+theread3.start()
 
 #------以上tab1関係-------
 
@@ -308,9 +344,32 @@ password_box_c = ttk.Entry(tab2)
 password_box_c.grid(column=1, row=5, sticky=tk.EW, padx=5)
 password_box_c.insert(0, "password")
 
+def login_change_state():
+    if login_value.get():
+        user_box_c.delete(0, tk.END)
+        user_box_c.insert(0, "anonymous")
+        user_box_c.configure(state=tk.DISABLED)
+
+        password_box_c.delete(0, tk.END)
+        password_box_c.insert(0, "")
+        password_box_c.configure(state=tk.DISABLED)
+    else:
+        user_box_c.configure(state=tk.NORMAL)
+        user_box_c.delete(0, tk.END)
+        user_box_c.insert(0, "user")
+
+        password_box_c.configure(state=tk.NORMAL)
+        password_box_c.delete(0, tk.END)
+        password_box_c.insert(0, "password")
+
+login_value = tk.BooleanVar()
+login_anonymous_btn_c = tk.Checkbutton(tab2, variable=login_value,
+                                    text="匿名ログイン", command=login_change_state)
+login_anonymous_btn_c.grid(column=0, row=6, pady=10)
+
 #起動ボタン関係
 ftp_connect = ttk.Button(tab2, text="接続", command=theread2.start)
-ftp_connect.grid(column=1, row=6, sticky=tk.W, padx=90)
+ftp_connect.grid(column=1, row=7, sticky=tk.W, padx=90)
 
 #------以上tab2関係-------
 
