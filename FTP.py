@@ -115,6 +115,15 @@ def client_window():
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
 
+        def status():
+            while True:
+                print(os.path.getsize(dl_directory + "\\" + files[i]))
+                time.sleep(0.01)
+
+        theread4 = threading.Thread(target=status)
+        theread4.setDaemon(True)
+
+
         #ダウンロードディレクトリを取得
         dl_directory = dl_folder_box_s.get()
         #リストボックスの選択されている項目を取得
@@ -144,6 +153,7 @@ def client_window():
 
             #ファイルをバイナリ転送モードで取得
             with open(dl_directory + "\\" + files[i], "wb") as f:
+                theread4.start()
                 ftp.retrbinary("RETR " + files[i], f.write)
             #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
@@ -236,7 +246,7 @@ def exit_button():
         stop()
 
 #時計を表示
-def change_label_text():
+def showclock():
     while True:
         clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         clock.grid(column=0, row=7, sticky=tk.W, padx=0)
@@ -255,7 +265,7 @@ def start_theread2():
     theread2.setDaemon(True)
     theread2.start()
 
-theread3 = threading.Thread(target=change_label_text)
+theread3 = threading.Thread(target=showclock)
 theread3.setDaemon(True)
 
 #メインウィンドウを作成
