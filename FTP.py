@@ -18,7 +18,7 @@ import time
 server_flag = False
 client_flag = False
 
-#ã‚µãƒ¼ãƒèµ·å‹•æ™‚ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦èµ·å‹•é–¢æ•°
+#ƒT[ƒo‹N“®‚ÌƒEƒBƒ“ƒhƒE‹N“®ŠÖ”
 def server_window():
 
     def stop_server():
@@ -26,36 +26,36 @@ def server_window():
         server_win.destroy()
         ftp_open.config(state = tk.NORMAL)
 
-    #main_winã®å­ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã¨ã—ã¦server_winã‚’ä½œæˆ
+    #main_win‚ÌqƒEƒBƒ“ƒhƒE‚Æ‚µ‚Äserver_win‚ğì¬
     server_win = tk.Toplevel()
 
-    #ã‚µãƒ¼ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’å¤‰æ›´
-    server_win.title("ã‚µãƒ¼ãƒç®¡ç†ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦")
+    #ƒT[ƒoƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹‚ğ•ÏX
+    server_win.title("ƒT[ƒoŠÇ—ƒEƒBƒ“ƒhƒE")
 
-    #ã‚µãƒ¼ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’å¤‰æ›´
+    #ƒT[ƒoƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ğ•ÏX
     server_win.geometry("200x100")
 
-    #ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¢ã‚¤ã‚³ãƒ³ã®è¨­å®š
+    #ƒEƒBƒ“ƒhƒEƒAƒCƒRƒ“‚Ìİ’è
     server_win.iconbitmap("soft_ico.ico")
 
-    #ã‚µãƒ¼ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ä½œæˆãƒ»é…ç½®
+    #ƒT[ƒoƒEƒBƒ“ƒhƒE‚ÉƒtƒŒ[ƒ€‚ğì¬E”z’u
     server_frm = ttk.Frame(server_win)
     server_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
-    #è‡ªIPè¡¨ç¤º
+    #©IP•\¦
     ip = combo.get()
-    ip_label_s = ttk.Label(server_frm, text="è‡ªIPã‚¢ãƒ‰ãƒ¬ã‚¹ :")
+    ip_label_s = ttk.Label(server_frm, text="©IPƒAƒhƒŒƒX :")
     ip_label_s.grid(column=0, row=0, sticky=tk.W, pady=5)
     ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
 
-    #çµ‚äº†ãƒœã‚¿ãƒ³ä½œæˆãƒ»é…ç½®
-    ftp_close = ttk.Button(server_frm, text="çµ‚äº†", command = stop_server)
+    #I—¹ƒ{ƒ^ƒ“ì¬E”z’u
+    ftp_close = ttk.Button(server_frm, text="I—¹", command = stop_server)
     ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
 
-    #windowså´çµ‚äº†ãƒœã‚¿ãƒ³æŠ¼ä¸‹æ™‚é–¢æ•°å‘¼ã³å‡ºã—
+    #windows‘¤I—¹ƒ{ƒ^ƒ“‰Ÿ‰ºŠÖ”ŒÄ‚Ño‚µ
     server_win.protocol("WM_DELETE_WINDOW", exit_button)
 
-#ã‚µãƒ¼ãƒèµ·å‹•é–¢æ•°
+#ƒT[ƒo‹N“®ŠÖ”
 def server_open():
 
     server_window()
@@ -69,27 +69,27 @@ def server_open():
     password = password_box_s.get()
     directory = folder_box_s.get()
 
-    # èªè¨¼ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚’ä½œã‚‹
+    # ”FØƒ†[ƒU[‚ğì‚é
     authorizer = pyftpdlib.authorizers.DummyAuthorizer()
 
     if auth_value.get():
-        #anonymousèªè¨¼æ™‚
-        #TODO : æ¨©é™ã‚’rã®ã¿ã«å¤‰ãˆã‚‹å¿…è¦æœ‰?(ç¾çŠ¶ã¯ä½•ã§ã‚‚å‡ºæ¥ã¦ã—ã¾ã†)
+        #anonymous”FØ
+        #TODO : Œ ŒÀ‚ğr‚Ì‚İ‚É•Ï‚¦‚é•K—v—L?(Œ»ó‚Í‰½‚Å‚ào—ˆ‚Ä‚µ‚Ü‚¤)
         authorizer.add_anonymous(directory, perm="elradfmw")
     else:
         authorizer.add_user(user, password, directory, perm="elradfmw")
 
-    # å€‹ã€…ã®æ¥ç¶šã‚’ç®¡ç†ã™ã‚‹ãƒãƒ³ãƒ‰ãƒ©ãƒ¼ã‚’ä½œã‚‹
+    # ŒÂX‚ÌÚ‘±‚ğŠÇ—‚·‚éƒnƒ“ƒhƒ‰[‚ğì‚é
     handler = pyftpdlib.handlers.FTPHandler
     handler.authorizer = authorizer
 
-    # FTPã‚µãƒ¼ãƒãƒ¼ã‚’ç«‹ã¡ä¸Šã’ã‚‹
+    # FTPƒT[ƒo[‚ğ—§‚¿ã‚°‚é
     global server
     server = pyftpdlib.servers.FTPServer((ip, port), handler)
     server.serve_forever()
 
 
-#ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆèµ·å‹•æ™‚ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦èµ·å‹•é–¢æ•°
+#ƒNƒ‰ƒCƒAƒ“ƒg‹N“®‚ÌƒEƒBƒ“ƒhƒE‹N“®ŠÖ”
 def client_window():
 
     def stop_client():
@@ -99,20 +99,20 @@ def client_window():
 
     client_win = tk.Toplevel()
 
-    #ã‚µãƒ¼ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’å¤‰æ›´
-    client_win.title("ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç®¡ç†ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦")
+    #ƒT[ƒoƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹‚ğ•ÏX
+    client_win.title("ƒNƒ‰ƒCƒAƒ“ƒgŠÇ—ƒEƒBƒ“ƒhƒE")
 
-    #ã‚µãƒ¼ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’å¤‰æ›´
+    #ƒT[ƒoƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ğ•ÏX
     client_win.geometry("620x400")
 
-    #ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¢ã‚¤ã‚³ãƒ³ã®è¨­å®š
+    #ƒEƒBƒ“ƒhƒEƒAƒCƒRƒ“‚Ìİ’è
     client_win.iconbitmap("soft_ico.ico")
 
-    #ã‚µãƒ¼ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ä½œæˆãƒ»é…ç½®
+    #ƒT[ƒoƒEƒBƒ“ƒhƒE‚ÉƒtƒŒ[ƒ€‚ğì¬E”z’u
     client_frm = ttk.Frame(client_win)
     client_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
-    #é¸æŠã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’å°‚ç”¨ãƒ•ã‚©ãƒ«ãƒ€ã«ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰
+    #‘I‘ğ‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ğê—pƒtƒHƒ‹ƒ_‚Éƒ_ƒEƒ“ƒ[ƒh
     def select_lb(event):
 
         def status():
@@ -124,106 +124,109 @@ def client_window():
         theread4.setDaemon(True)
 
 
-        #ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å–å¾—
+        #ƒ_ƒEƒ“ƒ[ƒhƒfƒBƒŒƒNƒgƒŠ‚ğæ“¾
         dl_directory = dl_folder_box_s.get()
-        #ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã®é¸æŠã•ã‚Œã¦ã„ã‚‹é …ç›®ã‚’å–å¾—
+        #ƒŠƒXƒgƒ{ƒbƒNƒX‚Ì‘I‘ğ‚³‚ê‚Ä‚¢‚é€–Ú‚ğæ“¾
         for i in lb.curselection():
 
-            #ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰é€²è¡Œä¸­ã®ãƒ›ãƒƒãƒ—ã‚¢ãƒƒãƒ—ã‚’å‡ºã™
+            #ƒ_ƒEƒ“ƒ[ƒhis’†‚ÌƒzƒbƒvƒAƒbƒv‚ğo‚·
             nowload_win = tk.Toplevel()
-            nowload_win.title("ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¦ã„ã¾ã™...")
+            nowload_win.title("ƒ_ƒEƒ“ƒ[ƒh‚µ‚Ä‚¢‚Ü‚·...")
             nowload_win.geometry("400x100")
             nowload_win.iconbitmap("soft_ico.ico")
             nowload_frm = ttk.Frame(nowload_win)
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
-            #ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’å–å¾—
+            #ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğæ“¾
             ftp.voidcmd("TYPE I")
             size = ftp.size(files[i])
 
-            #å„ç¨®ã‚¦ã‚£ã‚¸ã‚§ãƒƒãƒˆ(ãƒ•ã‚¡ã‚¤ãƒ«åï¼Œãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å…ˆï¼Œã‚µã‚¤ã‚º)ã‚’è¡¨ç¤º
-            nowload_filename = ttk.Label(nowload_frm, text="ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«: " + files[i])
+            #ŠeíƒEƒBƒWƒFƒbƒg(ƒtƒ@ƒCƒ‹–¼Cƒ_ƒEƒ“ƒ[ƒhæCƒTƒCƒY)‚ğ•\¦
+            nowload_filename = ttk.Label(nowload_frm, text="ƒ_ƒEƒ“ƒ[ƒh‚·‚éƒtƒ@ƒCƒ‹: " + files[i] )
             nowload_filename.grid(column=0, row=0, pady=5, sticky=tk.W)
 
-            nowload_filename = ttk.Label(nowload_frm, text="ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å…ˆ: " + dl_directory)
+            nowload_filename = ttk.Label(nowload_frm, text="ƒ_ƒEƒ“ƒ[ƒhæ: " + dl_directory)
             nowload_filename.grid(column=0, row=1, pady=5, sticky=tk.W)
 
-            nowload_filesize = ttk.Label(nowload_frm, text="ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º:    {}[byte]".format(size))
+            nowload_filesize = ttk.Label(nowload_frm, text="ƒtƒ@ƒCƒ‹ƒTƒCƒY:    {}[byte]".format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
 
-            #ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒã‚¤ãƒŠãƒªè»¢é€ãƒ¢ãƒ¼ãƒ‰ã§å–å¾—
+            #ƒtƒ@ƒCƒ‹‚ğƒoƒCƒiƒŠ“]‘—ƒ‚[ƒh‚Åæ“¾
             with open(dl_directory + "\\" + files[i], "wb") as f:
                 theread4.start()
                 ftp.retrbinary("RETR " + files[i], f.write)
-            #ToDo: ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ãŒçµ‚ã‚ã£ãŸã‚‰ã“ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã•ã›ã‚‹
+            #ToDo: ƒ_ƒEƒ“ƒ[ƒh‚ªI‚í‚Á‚½‚ç‚±‚ÌƒEƒBƒ“ƒhƒE‚ğ•Â‚¶‚³‚¹‚é
 
-    lb_label = ttk.Label(client_frm, text="ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ« :")
+    lb_label = ttk.Label(client_frm, text="ƒ_ƒEƒ“ƒ[ƒh‚·‚éƒtƒ@ƒCƒ‹ :")
     lb_label.grid(column=0, row=0, pady=5, sticky=tk.N)
 
-    #ã‚µãƒ¼ãƒå´ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸€è¦§å–å¾—
+    #ƒT[ƒo‘¤‚Ìƒtƒ@ƒCƒ‹‚Ìˆê——æ“¾
     files = ftp.nlst(".")
 
-    #ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—
-    txt = tk.StringVar(value=files)
+    #ƒtƒ@ƒCƒ‹–¼‚ğæ“¾
+    fname = tk.StringVar(value=files)
+    
+    #ƒT[ƒo‘¤‚Ìƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğæ“¾
+    #fsize = ftp.size(tk.StringVar(value=files))
 
-    #ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ä½œæˆãƒ»è¨­ç½®
-    lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
+    #ƒŠƒXƒgƒ{ƒbƒNƒXì¬Eİ’u
+    lb = tk.Listbox(client_frm, listvariable=fname, width=70, height=16)
     lb.grid(column=1, row=0)
 
-    #ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã®ä¸­èº«ã‚’é¸æŠã—ãŸã‚‰select_lbã‚’å®Ÿè¡Œ
+    #ƒŠƒXƒgƒ{ƒbƒNƒX‚Ì’†g‚ğ‘I‘ğ‚µ‚½‚çselect_lb‚ğÀs
     lb.bind("<<ListboxSelect>>", select_lb)
 
-    #ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹å†…ã®è¤‡æ•°é¸æŠã‚’å¯èƒ½ã«ã™ã‚‹
+    #ƒŠƒXƒgƒ{ƒbƒNƒX“à‚Ì•¡”‘I‘ğ‚ğ‰Â”\‚É‚·‚é
     lb.configure(selectmode= tk.EXTENDED )
 
-    #ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼é¸æŠé–¢ä¿‚
+    #ƒtƒHƒ‹ƒ_[‘I‘ğŠÖŒW
     def dl_folder():
         dl_path = filedialog.askdirectory()
         dl_folder_path.set(dl_path)
 
     dl_folder_path = tk.StringVar()
-    dl_folder_label_s = ttk.Label(client_frm, text="ãƒ•ã‚©ãƒ«ãƒ€æŒ‡å®š :")
+    dl_folder_label_s = ttk.Label(client_frm, text="ƒtƒHƒ‹ƒ_w’è :")
     dl_folder_label_s.grid(column=0, row=1, pady=5)
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
     dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
     dl_folder_box_s.insert(0, os.path.realpath("./download"))
 
-    dl_folder_btn_s = ttk.Button(client_frm, text="å‚ç…§", command = dl_folder)
+    dl_folder_btn_s = ttk.Button(client_frm, text="QÆ", command = dl_folder)
     dl_folder_btn_s.grid(column=2, row=1)
 
-    #ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®ä½œæˆãƒ»é…ç½®
+    #ƒXƒNƒ[ƒ‹ƒo[‚Ìì¬E”z’u
     scrollbar = ttk.Scrollbar(client_frm,orient=tk.VERTICAL,command=lb.yview)
     scrollbar.grid(column=2, row=0, sticky=tk.NS)
 
-    #çµ‚äº†ãƒœã‚¿ãƒ³ã®ä½œæˆãƒ»é…ç½®
-    ftp_close = ttk.Button(client_frm, text="çµ‚äº†", command = stop_client)
+    #I—¹ƒ{ƒ^ƒ“‚Ìì¬E”z’u
+    ftp_close = ttk.Button(client_frm, text="I—¹", command = stop_client)
     ftp_close.grid(column=1, row=2, sticky=tk.N, padx=5)
 
-    #windowså´çµ‚äº†ãƒœã‚¿ãƒ³æŠ¼ä¸‹æ™‚é–¢æ•°å‘¼ã³å‡ºã—
+    #windows‘¤I—¹ƒ{ƒ^ƒ“‰Ÿ‰ºŠÖ”ŒÄ‚Ño‚µ
     client_win.protocol("WM_DELETE_WINDOW", exit_button)
 
 
-#ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆèµ·å‹•é–¢æ•°
+#ƒNƒ‰ƒCƒAƒ“ƒg‹N“®ŠÖ”
 def client_connect():
 
     global client_flag
     client_flag = True
 
     ip = ip_box_c.get()
-    #TODO: ä½•æ•…ã‹portã ã‘intã«ã‚­ãƒ£ã‚¹ãƒˆã—ãªã„ã¨ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹
+    #TODO: ‰½ŒÌ‚©port‚¾‚¯int‚ÉƒLƒƒƒXƒg‚µ‚È‚¢‚ÆƒGƒ‰[‚É‚È‚é
     port = int(port_box_c.get())
     user = user_box_c.get()
     password = password_box_c.get()
 
-    #FTPã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
+    #FTPƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰»
     global ftp
     ftp = FTP()
 
-    #FTPã‚µãƒ¼ãƒã«ãƒ­ã‚°ã‚¤ãƒ³
+    #FTPƒT[ƒo‚ÉƒƒOƒCƒ“
     ftp.connect(ip,port)
 
-    #åŒ¿åãƒ­ã‚°ã‚¤ãƒ³ã®æœ‰ç„¡
+    #“½–¼ƒƒOƒCƒ“‚Ì—L–³
     if login_value.get():
         ftp.login()
     else:
@@ -231,7 +234,7 @@ def client_connect():
 
     client_window()
 
-#FTP&ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†é–¢æ•°
+#FTP&ƒvƒƒOƒ‰ƒ€I—¹ŠÖ”
 def stop():
     if (server_flag):
         server.close_all()
@@ -239,20 +242,20 @@ def stop():
         ftp.close()
     exit()
 
-#windowså´çµ‚äº†ãƒœã‚¿ãƒ³æŠ¼ä¸‹æ™‚é–¢æ•°
+#windows‘¤I—¹ƒ{ƒ^ƒ“‰Ÿ‰ºŠÖ”
 def exit_button():
-    if messagebox.askokcancel("ç¢ºèª","ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ\
-                            \nFTPã§é€šä¿¡ä¸­ã®å ´åˆã€ã‚µãƒ¼ãƒã¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®ä¸¡æ–¹ãŒçµ‚äº†ã•ã‚Œã¾ã™ã€‚"):
+    if messagebox.askokcancel("Šm”F","ƒvƒƒOƒ‰ƒ€‚ğI—¹‚µ‚Ä‚à‚æ‚ë‚µ‚¢‚Å‚·‚©H\
+                            \nFTP‚Å’ÊM’†‚Ìê‡AƒT[ƒo‚ÆƒNƒ‰ƒCƒAƒ“ƒg‚Ì—¼•û‚ªI—¹‚³‚ê‚Ü‚·B"):
         stop()
 
-#æ™‚è¨ˆã‚’è¡¨ç¤º
+#Œv‚ğ•\¦
 def showclock():
     while True:
         clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         clock.grid(column=0, row=7, sticky=tk.W, padx=0)
         time.sleep(1)
 
-#ã‚¹ãƒ¬ãƒƒãƒ‡ã‚£ãƒ³ã‚°å®£è¨€
+#ƒXƒŒƒbƒfƒBƒ“ƒOéŒ¾
 def start_theread1():
     ftp_open.config(state = tk.DISABLED)
     theread1 = threading.Thread(target=server_open)
@@ -268,90 +271,90 @@ def start_theread2():
 theread3 = threading.Thread(target=showclock)
 theread3.setDaemon(True)
 
-#ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆ
+#ƒƒCƒ“ƒEƒBƒ“ƒhƒE‚ğì¬
 main_win = tk.Tk()
 
-#ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’å¤‰æ›´
-main_win.title("ãµãã„ã‚‹å…±æœ‰ã‚½ãƒ•ãƒˆ")
+#ƒƒCƒ“ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹‚ğ•ÏX
+main_win.title("‚Ó‚Ÿ‚¢‚é‹¤—Lƒ\ƒtƒg")
 
-#ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’å¤‰æ›´
+#ƒƒCƒ“ƒEƒBƒ“ƒhƒEƒTƒCƒY‚ğ•ÏX
 main_win.geometry("650x400")
 
-#ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¢ã‚¤ã‚³ãƒ³ã®è¨­å®š
+#ƒEƒBƒ“ƒhƒEƒAƒCƒRƒ“‚Ìİ’è
 main_win.iconbitmap("soft_ico.ico")
 
-#ãƒ†ãƒ¼ãƒè¨­å®š
+#ƒe[ƒ}İ’è
 ttk.Style().theme_use("classic")
 
-#ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ãƒãƒ¼ãƒˆãƒ–ãƒƒã‚¯ã‚’ä½œæˆ
+#ƒƒCƒ“ƒEƒBƒ“ƒhƒE‚Éƒm[ƒgƒuƒbƒN‚ğì¬
 nb = ttk.Notebook(main_win)
 
-#ãƒãƒ¼ãƒˆãƒ–ãƒƒã‚¯ã«é–¢ã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ä½œæˆ
+#ƒm[ƒgƒuƒbƒN‚ÉŠÖ‚·‚éƒtƒŒ[ƒ€‚ğì¬
 tab1 = ttk.Frame(nb)
 tab2 = ttk.Frame(nb)
 
-#ãƒãƒ¼ãƒˆãƒ–ãƒƒã‚¯ã«ã‚¿ãƒ–ã‚’è¿½åŠ 
-nb.add(tab1, text="ã‚µãƒ¼ãƒ", padding=3)
-nb.add(tab2, text="ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆ", padding=3)
+#ƒm[ƒgƒuƒbƒN‚Éƒ^ƒu‚ğ’Ç‰Á
+nb.add(tab1, text="ƒT[ƒo", padding=3)
+nb.add(tab2, text="ƒNƒ‰ƒCƒAƒ“ƒg", padding=3)
 
-#ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ãƒãƒ¼ãƒˆãƒ–ãƒƒã‚¯ã‚’é…ç½®
+#ƒƒCƒ“ƒEƒBƒ“ƒhƒE‚Éƒm[ƒgƒuƒbƒN‚ğ”z’u
 nb.pack(fill="both",expand=1)
 
-#------ä»¥ä¸‹tab1é–¢ä¿‚-------
+#------ˆÈ‰ºtab1ŠÖŒW-------
 
-#è‡ªIPè¡¨ç¤º
-ip_label_s = ttk.Label(tab1, text="è‡ªIPã‚¢ãƒ‰ãƒ¬ã‚¹ :")
+#©IP•\¦
+ip_label_s = ttk.Label(tab1, text="©IPƒAƒhƒŒƒX :")
 ip_label_s.grid(column=0, row=0, sticky=tk.E,pady=5)
 
-#ã‚µãƒ¼ãƒæ©Ÿã®æŒã¤IPã‚¢ãƒ‰ãƒ¬ã‚¹ã®ãƒªã‚¹ãƒˆã‚’å–å¾—
+#ƒT[ƒo‹@‚Ì‚ÂIPƒAƒhƒŒƒX‚ÌƒŠƒXƒg‚ğæ“¾
 ip_list = socket.gethostbyname_ex(socket.gethostname())[2]
 combo = ttk.Combobox(tab1, state="readonly", values=ip_list)
 combo.set(ip_list[0])
 combo.grid(column=1, row=0, sticky=tk.W, padx=5)
 
 if len(ip_list)>1:
-    ip_label = ttk.Label(tab1, text="â€»ãƒ•ã‚¡ã‚¤ãƒ«å…±æœ‰å…ˆã®LANã«å±ã™ã‚‹IPã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’é¸æŠã—ã¦ãã ã•ã„")
+    ip_label = ttk.Label(tab1, text="¦ƒtƒ@ƒCƒ‹‹¤—Læ‚ÌLAN‚É‘®‚·‚éIPƒAƒhƒŒƒX‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢")
     ip_label.grid(column=2, row=0, sticky=tk.E,pady=5)
 
-#ãƒãƒ¼ãƒˆé–¢ä¿‚
-port_label_s = ttk.Label(tab1, text="ãƒãƒ¼ãƒˆç•ªå· :")
+#ƒ|[ƒgŠÖŒW
+port_label_s = ttk.Label(tab1, text="ƒ|[ƒg”Ô† :")
 port_label_s.grid(column=0, row=1,sticky=tk.E, pady=5)
 
 port_box_s = ttk.Entry(tab1)
 port_box_s.grid(column=1, row=1, sticky=tk.W,padx=5)
 port_box_s.insert(0, "21")
 
-#ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼é¸æŠé–¢ä¿‚
+#ƒtƒHƒ‹ƒ_[‘I‘ğŠÖŒW
 def folder():
     path = filedialog.askdirectory()
     folder_path.set(path)
 
 folder_path = tk.StringVar()
-folder_label_s = ttk.Label(tab1, text="ãƒ•ã‚©ãƒ«ãƒ€æŒ‡å®š :")
+folder_label_s = ttk.Label(tab1, text="ƒtƒHƒ‹ƒ_w’è :")
 folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
 folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
 folder_box_s.insert(0, os.path.realpath("."))
 
-folder_btn_s = ttk.Button(tab1, text="å‚ç…§", command = folder)
+folder_btn_s = ttk.Button(tab1, text="QÆ", command = folder)
 folder_btn_s.grid(column=2, row=2)
 
-#ãƒ¦ãƒ¼ã‚¶ãƒ¼é¸æŠé–¢ä¿‚
-user_label_s = ttk.Label(tab1, text="ãƒ¦ãƒ¼ã‚¶ãƒ¼ :")
+#ƒ†[ƒU[‘I‘ğŠÖŒW
+user_label_s = ttk.Label(tab1, text="ƒ†[ƒU[ :")
 user_label_s.grid(column=0, row=3, sticky=tk.E, pady=10)
 user_box_s = ttk.Entry(tab1)
 user_box_s.grid(column=1, row=3, sticky=tk.EW, padx=5)
 user_box_s.insert(0, "user")
 
-#ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰é¸æŠé–¢ä¿‚
-password_label_s = ttk.Label(tab1, text="ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ :")
+#ƒpƒXƒ[ƒh‘I‘ğŠÖŒW
+password_label_s = ttk.Label(tab1, text="ƒpƒXƒ[ƒh :")
 password_label_s.grid(column=0, row=4, sticky=tk.E, pady=10)
 password_box_s = ttk.Entry(tab1)
 password_box_s.grid(column=1, row=4, sticky=tk.EW, padx=5)
 password_box_s.insert(0, "password")
 
-#èªè¨¼é¸æŠé–¢ä¿‚
+#”FØ‘I‘ğŠÖŒW
 def auth_change_state():
     if auth_value.get():
         user_box_s.delete(0, tk.END)
@@ -372,43 +375,43 @@ def auth_change_state():
 
 auth_value = tk.BooleanVar()
 login_anonymous_btn_c = tk.Checkbutton(tab1, variable=auth_value,
-                                    text="åŒ¿åãƒ­ã‚°ã‚¤ãƒ³", command=auth_change_state)
+                                    text="“½–¼ƒƒOƒCƒ“", command=auth_change_state)
 login_anonymous_btn_c.grid(column=0, row=5, pady=10)
 
-#èµ·å‹•ãƒœã‚¿ãƒ³é–¢ä¿‚
-ftp_open = ttk.Button(tab1, text="èµ·å‹•", command=start_theread1)
+#‹N“®ƒ{ƒ^ƒ“ŠÖŒW
+ftp_open = ttk.Button(tab1, text="‹N“®", command=start_theread1)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
 
-#æ™‚è¨ˆã‚¹ã‚¿ãƒ¼ãƒˆ
+#ŒvƒXƒ^[ƒg
 theread3.start()
 
-#------ä»¥ä¸Štab1é–¢ä¿‚-------
+#------ˆÈãtab1ŠÖŒW-------
 
-#------ä»¥ä¸‹tab2é–¢ä¿‚-------
+#------ˆÈ‰ºtab2ŠÖŒW-------
 
-#æ¥ç¶šå…ˆIPé–¢ä¿‚
-ip_label_c = ttk.Label(tab2, text="æ¥ç¶šå…ˆIPã‚¢ãƒ‰ãƒ¬ã‚¹ :")
+#Ú‘±æIPŠÖŒW
+ip_label_c = ttk.Label(tab2, text="Ú‘±æIPƒAƒhƒŒƒX :")
 ip_label_c.grid(column=0, row=0, sticky=tk.E,pady=10)
 ip_box_c = ttk.Entry(tab2)
 ip_box_c.grid(column=1, row=0, sticky=tk.W,padx=5)
 
-#ãƒãƒ¼ãƒˆé–¢ä¿‚
-port_label_c = ttk.Label(tab2, text="æ¥ç¶šå…ˆãƒãƒ¼ãƒˆç•ªå· :")
+#ƒ|[ƒgŠÖŒW
+port_label_c = ttk.Label(tab2, text="Ú‘±æƒ|[ƒg”Ô† :")
 port_label_c.grid(column=0, row=1, sticky=tk.E, pady=5)
 
 port_box_c = ttk.Entry(tab2)
 port_box_c.grid(column=1, row=1, sticky=tk.W,padx=5)
 port_box_c.insert(0, "21")
 
-#ãƒ¦ãƒ¼ã‚¶ãƒ¼é¸æŠé–¢ä¿‚
-user_label_c = ttk.Label(tab2, text="ãƒ¦ãƒ¼ã‚¶ãƒ¼ :")
+#ƒ†[ƒU[‘I‘ğŠÖŒW
+user_label_c = ttk.Label(tab2, text="ƒ†[ƒU[ :")
 user_label_c.grid(column=0, row=4, sticky=tk.E, pady=10)
 user_box_c = ttk.Entry(tab2)
 user_box_c.grid(column=1, row=4, sticky=tk.EW, padx=5)
 user_box_c.insert(0, "user")
 
-#ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰é¸æŠé–¢ä¿‚
-password_label_c = ttk.Label(tab2, text="ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ :")
+#ƒpƒXƒ[ƒh‘I‘ğŠÖŒW
+password_label_c = ttk.Label(tab2, text="ƒpƒXƒ[ƒh :")
 password_label_c.grid(column=0, row=5, sticky=tk.E, pady=10)
 password_box_c = ttk.Entry(tab2)
 password_box_c.grid(column=1, row=5, sticky=tk.EW, padx=5)
@@ -434,14 +437,14 @@ def login_change_state():
 
 login_value = tk.BooleanVar()
 login_anonymous_btn_c = tk.Checkbutton(tab2, variable=login_value,
-                                    text="åŒ¿åãƒ­ã‚°ã‚¤ãƒ³", command=login_change_state)
+                                    text="“½–¼ƒƒOƒCƒ“", command=login_change_state)
 login_anonymous_btn_c.grid(column=0, row=6, pady=10)
 
-#èµ·å‹•ãƒœã‚¿ãƒ³é–¢ä¿‚
-ftp_connect = ttk.Button(tab2, text="æ¥ç¶š", command=start_theread2)
+#‹N“®ƒ{ƒ^ƒ“ŠÖŒW
+ftp_connect = ttk.Button(tab2, text="Ú‘±", command=start_theread2)
 ftp_connect.grid(column=1, row=7, sticky=tk.W, padx=90)
 
-#------ä»¥ä¸Štab2é–¢ä¿‚-------
+#------ˆÈãtab2ŠÖŒW-------
 
 main_win.columnconfigure(0, weight=1)
 main_win.rowconfigure(0, weight=1)
