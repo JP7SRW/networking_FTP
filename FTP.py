@@ -164,13 +164,10 @@ def client_window():
     files = ftp.nlst(".")
 
     #ファイル名を取得
-    fname = tk.StringVar(value=files)
-    
-    #サーバ側のファイルサイズを取得
-    #fsize = ftp.size(tk.StringVar(value=files))
+    txt = tk.StringVar(value=files)
 
     #リストボックス作成・設置
-    lb = tk.Listbox(client_frm, listvariable=fname, width=70, height=16)
+    lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
     lb.grid(column=1, row=0)
 
     #リストボックスの中身を選択したらselect_lbを実行
