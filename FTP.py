@@ -115,14 +115,28 @@ def client_window():
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
 
-        def status():
-            while True:
-                print(os.path.getsize(dl_directory + "\\" + files[i]))
-                time.sleep(0.01)
+        def download():
+            with open(dl_directory + "\\" + files[i], "wb") as f:
+                ftp.retrbinary("RETR " + files[i], f.write)
 
-        theread4 = threading.Thread(target=status)
+        theread4 = threading.Thread(target=download)
         theread4.setDaemon(True)
 
+        def progressbar():
+            nowload_progressbar.start(100)
+            nowload_size = 0
+
+            while nowload_size < size:
+                nowload_size = os.path.getsize(dl_directory + "\\" + files[i])
+                time.sleep(0.05)
+
+            print("End")
+            nowload_progressbar.stop()
+            nowload_win.destroy()
+            return
+
+        theread5 = threading.Thread(target=progressbar)
+        theread5.setDaemon(True)
 
         #ダウンロードディレクトリを取得
         dl_directory = dl_folder_box_s.get()
@@ -132,7 +146,7 @@ def client_window():
             #ダウンロード進行中のホップアップを出す
             nowload_win = tk.Toplevel()
             nowload_win.title("ダウンロードしています...")
-            nowload_win.geometry("400x100")
+            nowload_win.geometry("500x200")
             nowload_win.iconbitmap("soft_ico.ico")
             nowload_frm = ttk.Frame(nowload_win)
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
@@ -151,11 +165,13 @@ def client_window():
             nowload_filesize = ttk.Label(nowload_frm, text="ファイルサイズ:    {}[byte]".format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
 
-            #ファイルをバイナリ転送モードで取得
-            with open(dl_directory + "\\" + files[i], "wb") as f:
-                theread4.start()
-                ftp.retrbinary("RETR " + files[i], f.write)
-            #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
+            nowload_progressbar = ttk.Progressbar(nowload_frm, orient="horizontal",
+                                                length=300, mode="indeterminate",
+                                                value=0, maximum=10)
+            nowload_progressbar.grid(column=0, row=3, pady=5, sticky=tk.W)
+
+            theread4.start()
+            theread5.start()
 
     lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
     lb_label.grid(column=0, row=0, pady=5, sticky=tk.N)
