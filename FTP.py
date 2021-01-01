@@ -115,6 +115,15 @@ def client_window():
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
 
+        def status():
+            while True:
+                print(os.path.getsize(dl_directory + "\\" + files[i]))
+                time.sleep(0.01)
+
+        theread4 = threading.Thread(target=status)
+        theread4.setDaemon(True)
+
+
         #ダウンロードディレクトリを取得
         dl_directory = dl_folder_box_s.get()
         #リストボックスの選択されている項目を取得
@@ -144,6 +153,7 @@ def client_window():
 
             #ファイルをバイナリ転送モードで取得
             with open(dl_directory + "\\" + files[i], "wb") as f:
+                theread4.start()
                 ftp.retrbinary("RETR " + files[i], f.write)
             #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
