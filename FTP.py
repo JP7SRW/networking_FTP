@@ -236,7 +236,7 @@ def exit_button():
         stop()
 
 #時計を表示
-def change_label_text():
+def showclock():
     while True:
         clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         clock.grid(column=0, row=7, sticky=tk.W, padx=0)
@@ -255,7 +255,7 @@ def start_theread2():
     theread2.setDaemon(True)
     theread2.start()
 
-theread3 = threading.Thread(target=change_label_text)
+theread3 = threading.Thread(target=showclock)
 theread3.setDaemon(True)
 
 #メインウィンドウを作成
