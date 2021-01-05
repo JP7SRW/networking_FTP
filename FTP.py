@@ -198,7 +198,7 @@ def client_window():
         dl_folder_path.set(dl_path)
 
     dl_folder_path = tk.StringVar()
-    dl_folder_label_s = ttk.Label(client_frm, text="フォルダ指定 :")
+    dl_folder_label_s = ttk.Label(client_frm, text="保存先 :")
     dl_folder_label_s.grid(column=0, row=1, pady=5)
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
