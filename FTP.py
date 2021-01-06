@@ -21,6 +21,11 @@ client_flag = False
 #サーバ起動時のウィンドウ起動関数
 def server_window():
 
+    def stop_server():
+        server.close_all()
+        server_win.destroy()
+        ftp_open.config(state = tk.NORMAL)
+
     #main_winの子ウィンドウとしてserver_winを作成
     server_win = tk.Toplevel()
 
@@ -44,18 +49,11 @@ def server_window():
     ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
 
     #終了ボタン作成・配置
-    ftp_close = ttk.Button(server_frm, text="終了", command = stop)
+    ftp_close = ttk.Button(server_frm, text="終了", command = stop_server)
     ftp_close.grid(column=0, row=1, sticky=tk.W, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
     server_win.protocol("WM_DELETE_WINDOW", exit_button)
-
-#時計を表示
-def changeLabelText():
-    while True:
-        clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
-        time.sleep(1)
 
 #サーバ起動関数
 def server_open():
@@ -94,6 +92,11 @@ def server_open():
 #クライアント起動時のウィンドウ起動関数
 def client_window():
 
+    def stop_client():
+        ftp.close()
+        client_win.destroy()
+        ftp_connect.config(state = tk.NORMAL)
+
     client_win = tk.Toplevel()
 
     #サーバウィンドウのタイトルを変更
@@ -111,43 +114,83 @@ def client_window():
 
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
+
+        def download():
+            with open(dl_directory + "\\" + files[i], "wb") as f:
+                ftp.retrbinary("RETR " + files[i], f.write)
+
+        theread4 = threading.Thread(target=download)
+        theread4.setDaemon(True)
+
+        def progressbar():
+            nowload_progressbar.start(100)
+            nowload_size = 0
+
+            while nowload_size < size:
+                nowload_size = os.path.getsize(dl_directory + "\\" + files[i])
+                time.sleep(0.05)
+
+            print("End")
+            nowload_progressbar.stop()
+            nowload_win.destroy()
+            return
+
+        theread5 = threading.Thread(target=progressbar)
+        theread5.setDaemon(True)
+
+        #ダウンロードディレクトリを取得
         dl_directory = dl_folder_box_s.get()
+        #リストボックスの選択されている項目を取得
         for i in lb.curselection():
+
             #ダウンロード進行中のホップアップを出す
             nowload_win = tk.Toplevel()
             nowload_win.title("ダウンロードしています...")
-            nowload_win.geometry("400x100")
+            nowload_win.geometry("500x200")
             nowload_win.iconbitmap("soft_ico.ico")
             nowload_frm = ttk.Frame(nowload_win)
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
+
             #ファイルサイズを取得
-            ftp.voidcmd('TYPE I')
+            ftp.voidcmd("TYPE I")
             size = ftp.size(files[i])
+
             #各種ウィジェット(ファイル名，ダウンロード先，サイズ)を表示
-            nowload_filename = ttk.Label(nowload_frm, text='ダウンロードするファイル: ' + files[i])
+            nowload_filename = ttk.Label(nowload_frm, text="ダウンロードするファイル: " + files[i])
             nowload_filename.grid(column=0, row=0, pady=5, sticky=tk.W)
 
-            nowload_filename = ttk.Label(nowload_frm, text='ダウンロード先: ' + dl_directory)
+            nowload_filename = ttk.Label(nowload_frm, text="ダウンロード先: " + dl_directory)
             nowload_filename.grid(column=0, row=1, pady=5, sticky=tk.W)
 
-            nowload_filesize = ttk.Label(nowload_frm, text='ファイルサイズ: {}[byte]'.format(size))
+            nowload_filesize = ttk.Label(nowload_frm, text="ファイルサイズ:    {}[byte]".format(size))
             nowload_filesize.grid(column=0, row=2, pady=5, sticky=tk.W)
-            #ファイルをバイナリ転送モードで取得
-            with open(dl_directory + '\\' + files[i], 'wb') as f:
-                ftp.retrbinary('RETR ' + files[i], f.write)
-            #ToDo: ダウンロードが終わったらこのウィンドウを閉じさせる
 
+            nowload_progressbar = ttk.Progressbar(nowload_frm, orient="horizontal",
+                                                length=300, mode="indeterminate",
+                                                value=0, maximum=10)
+            nowload_progressbar.grid(column=0, row=3, pady=5, sticky=tk.W)
+
+            theread4.start()
+            theread5.start()
 
     lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
-    lb_label.grid(column=0, row=0, pady=5, sticky=N)
+    lb_label.grid(column=0, row=0, pady=5, sticky=tk.N)
+
     #サーバ側のファイルの一覧取得
     files = ftp.nlst(".")
-    fileinfo = ftp.mlsd()
+
+    #ファイル名を取得
     txt = tk.StringVar(value=files)
+
+    #リストボックス作成・設置
     lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
-    lb.bind("<<ListboxSelect>>", select_lb)
     lb.grid(column=1, row=0)
-    lb.configure(selectmode="extended")
+
+    #リストボックスの中身を選択したらselect_lbを実行
+    lb.bind("<<ListboxSelect>>", select_lb)
+
+    #リストボックス内の複数選択を可能にする
+    lb.configure(selectmode= tk.EXTENDED )
 
     #フォルダー選択関係
     def dl_folder():
@@ -155,12 +198,12 @@ def client_window():
         dl_folder_path.set(dl_path)
 
     dl_folder_path = tk.StringVar()
-    dl_folder_label_s = ttk.Label(client_frm, text="フォルダ指定 :")
+    dl_folder_label_s = ttk.Label(client_frm, text="保存先 :")
     dl_folder_label_s.grid(column=0, row=1, pady=5)
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
     dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
-    dl_folder_box_s.insert(0, os.path.realpath('./download'))
+    dl_folder_box_s.insert(0, os.path.realpath("./download"))
 
     dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
     dl_folder_btn_s.grid(column=2, row=1)
@@ -170,7 +213,7 @@ def client_window():
     scrollbar.grid(column=2, row=0, sticky=tk.NS)
 
     #終了ボタンの作成・配置
-    ftp_close = ttk.Button(client_frm, text="終了", command = stop)
+    ftp_close = ttk.Button(client_frm, text="終了", command = stop_client)
     ftp_close.grid(column=1, row=2, sticky=tk.N, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
@@ -179,6 +222,9 @@ def client_window():
 
 #クライアント起動関数
 def client_connect():
+
+    global client_flag
+    client_flag = True
 
     ip = ip_box_c.get()
     #TODO: 何故かportだけintにキャストしないとエラーになる
@@ -211,16 +257,31 @@ def stop():
 
 #windows側終了ボタン押下時関数
 def exit_button():
-    if messagebox.askokcancel("確認","プログラムを終了してもいいですか？\
-                                \nFTPで通信中の場合、通信も終了されます"):
+    if messagebox.askokcancel("確認","プログラムを終了してもよろしいですか？\
+                            \nFTPで通信中の場合、サーバとクライアントの両方が終了されます。"):
         stop()
 
+#時計を表示
+def showclock():
+    while True:
+        clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
+        time.sleep(1)
+
 #スレッディング宣言
-theread1 = threading.Thread(target=server_open)
-theread1.setDaemon(True)
-theread2 = threading.Thread(target=client_connect)
-theread2.setDaemon(True)
-theread3 = threading.Thread(target=changeLabelText)
+def start_theread1():
+    ftp_open.config(state = tk.DISABLED)
+    theread1 = threading.Thread(target=server_open)
+    theread1.setDaemon(True)
+    theread1.start()
+
+def start_theread2():
+    ftp_connect.config(state = tk.DISABLED)
+    theread2 = threading.Thread(target=client_connect)
+    theread2.setDaemon(True)
+    theread2.start()
+
+theread3 = threading.Thread(target=showclock)
 theread3.setDaemon(True)
 
 #メインウィンドウを作成
@@ -230,7 +291,7 @@ main_win = tk.Tk()
 main_win.title("ふぁいる共有ソフト")
 
 #メインウィンドウサイズを変更
-main_win.geometry("600x400")
+main_win.geometry("650x400")
 
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
@@ -250,7 +311,7 @@ nb.add(tab1, text="サーバ", padding=3)
 nb.add(tab2, text="クライアント", padding=3)
 
 #メインウィンドウにノートブックを配置
-nb.pack(fill='both',expand=1)
+nb.pack(fill="both",expand=1)
 
 #------以下tab1関係-------
 
@@ -260,13 +321,13 @@ ip_label_s.grid(column=0, row=0, sticky=tk.E,pady=5)
 
 #サーバ機の持つIPアドレスのリストを取得
 ip_list = socket.gethostbyname_ex(socket.gethostname())[2]
-combo = ttk.Combobox(tab1, state='readonly', values=ip_list)
+combo = ttk.Combobox(tab1, state="readonly", values=ip_list)
 combo.set(ip_list[0])
 combo.grid(column=1, row=0, sticky=tk.W, padx=5)
 
 if len(ip_list)>1:
-    ip_label = ttk.Label(tab1, text="※ファイル共有先のLANに属するIPアドレスを選択")
-    ip_label.grid(column=2, row=0, sticky=tk.W,pady=5)
+    ip_label = ttk.Label(tab1, text="※ファイル共有先のLANに属するIPアドレスを選択してください")
+    ip_label.grid(column=2, row=0, sticky=tk.E,pady=5)
 
 #ポート関係
 port_label_s = ttk.Label(tab1, text="ポート番号 :")
@@ -283,12 +344,11 @@ def folder():
 
 folder_path = tk.StringVar()
 folder_label_s = ttk.Label(tab1, text="フォルダ指定 :")
-
 folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
 folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=5)
-folder_box_s.insert(0, os.path.realpath('.'))
+folder_box_s.insert(0, os.path.realpath("."))
 
 folder_btn_s = ttk.Button(tab1, text="参照", command = folder)
 folder_btn_s.grid(column=2, row=2)
@@ -332,7 +392,7 @@ login_anonymous_btn_c = tk.Checkbutton(tab1, variable=auth_value,
 login_anonymous_btn_c.grid(column=0, row=5, pady=10)
 
 #起動ボタン関係
-ftp_open = ttk.Button(tab1, text="起動", command=theread1.start)
+ftp_open = ttk.Button(tab1, text="起動", command=start_theread1)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
 
 #時計スタート
@@ -344,13 +404,13 @@ theread3.start()
 
 #接続先IP関係
 ip_label_c = ttk.Label(tab2, text="接続先IPアドレス :")
-ip_label_c.grid(column=0, row=0, sticky=tk.W,pady=10)
+ip_label_c.grid(column=0, row=0, sticky=tk.E,pady=10)
 ip_box_c = ttk.Entry(tab2)
 ip_box_c.grid(column=1, row=0, sticky=tk.W,padx=5)
 
 #ポート関係
 port_label_c = ttk.Label(tab2, text="接続先ポート番号 :")
-port_label_c.grid(column=0, row=1, pady=5)
+port_label_c.grid(column=0, row=1, sticky=tk.E, pady=5)
 
 port_box_c = ttk.Entry(tab2)
 port_box_c.grid(column=1, row=1, sticky=tk.W,padx=5)
@@ -358,14 +418,14 @@ port_box_c.insert(0, "21")
 
 #ユーザー選択関係
 user_label_c = ttk.Label(tab2, text="ユーザー :")
-user_label_c.grid(column=0, row=4, pady=10)
+user_label_c.grid(column=0, row=4, sticky=tk.E, pady=10)
 user_box_c = ttk.Entry(tab2)
 user_box_c.grid(column=1, row=4, sticky=tk.EW, padx=5)
 user_box_c.insert(0, "user")
 
 #パスワード選択関係
 password_label_c = ttk.Label(tab2, text="パスワード :")
-password_label_c.grid(column=0, row=5, pady=10)
+password_label_c.grid(column=0, row=5, sticky=tk.E, pady=10)
 password_box_c = ttk.Entry(tab2)
 password_box_c.grid(column=1, row=5, sticky=tk.EW, padx=5)
 password_box_c.insert(0, "password")
@@ -394,7 +454,7 @@ login_anonymous_btn_c = tk.Checkbutton(tab2, variable=login_value,
 login_anonymous_btn_c.grid(column=0, row=6, pady=10)
 
 #起動ボタン関係
-ftp_connect = ttk.Button(tab2, text="接続", command=theread2.start)
+ftp_connect = ttk.Button(tab2, text="接続", command=start_theread2)
 ftp_connect.grid(column=1, row=7, sticky=tk.W, padx=90)
 
 #------以上tab2関係-------
