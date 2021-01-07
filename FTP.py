@@ -270,8 +270,9 @@ def client_connect():
     global ftp
     ftp = FTP()
 
-    #FTPサーバにログイン(5はタイムアウト秒)
-    ftp.connect(ip,port,5)
+    try:
+        #FTPサーバにログイン(5はタイムアウト秒)
+        ftp.connect(ip,port,5)
 
         #匿名ログインの有無
         if login_value.get():
