@@ -18,7 +18,7 @@ import time
 server_flag = False
 client_flag = False
 
-def error_window():
+def error_window(error_sentence):
 
     def stop_error():
         error_win.destroy()
@@ -30,7 +30,7 @@ def error_window():
     error_win.title("エラー")
 
     #エラーウィンドウのサイズを変更
-    error_win.geometry("100x100")
+    error_win.geometry("200x100")
 
     #ウィンドウアイコンの設定
     error_win.iconbitmap("soft_ico.ico")
@@ -39,7 +39,7 @@ def error_window():
     error_frm = ttk.Frame(error_win)
     error_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
-    error_label = ttk.Label(error_frm, text="エラーです")
+    error_label = ttk.Label(error_frm, text=error_sentence)
     error_label.grid(column=0, row=0, sticky=tk.W, pady=5)
 
     #終了ボタン作成・配置
@@ -95,7 +95,7 @@ def server_open():
     server_flag = True
 
     ip = combo.get()
-    port = port_box_s.get()
+    port = int(port_box_s.get())
     user = user_box_s.get()
     password = password_box_s.get()
     directory = folder_box_s.get()
@@ -284,13 +284,10 @@ def client_connect():
 
         #ターミナルにエラー出力
         print(e)
-
         #エラーウィンドウ作成
-        error_window()
-
+        error_window(e)
         #ftp終了
         ftp.close()
-
         #接続ボタンを押下可能に戻す
         ftp_connect.config(state = tk.NORMAL)
 
