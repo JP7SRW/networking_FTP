@@ -232,12 +232,12 @@ def client_window():
         dl_folder_path.set(dl_path)
 
     dl_folder_path = tk.StringVar()
-    dl_folder_label_s = ttk.Label(client_frm, text="フォルダ指定 :")
+    dl_folder_label_s = ttk.Label(client_frm, text="保存先 :")
     dl_folder_label_s.grid(column=0, row=1, pady=5)
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
     dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
-    dl_folder_box_s.insert(0, os.path.realpath("./download"))
+    dl_folder_box_s.insert(0, "C:/Users/"+ os.getlogin() +"/Downloads")
 
     dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
     dl_folder_btn_s.grid(column=2, row=1)
@@ -270,10 +270,8 @@ def client_connect():
     global ftp
     ftp = FTP()
 
-    #サーバに接続失敗したらエラーを出力して、エラー画面作成
-    try:
-        #FTPサーバにログイン
-        ftp.connect(ip,port)
+    #FTPサーバにログイン(5はタイムアウト秒)
+    ftp.connect(ip,port,5)
 
         #匿名ログインの有無
         if login_value.get():
@@ -294,7 +292,7 @@ def client_connect():
 
         #接続ボタンを押下可能に戻す
         ftp_connect.config(state = tk.NORMAL)
-        
+
         return
 
     client_window()
@@ -395,7 +393,7 @@ def folder():
     folder_path.set(path)
 
 folder_path = tk.StringVar()
-folder_label_s = ttk.Label(tab1, text="フォルダ指定 :")
+folder_label_s = ttk.Label(tab1, text="公開フォルダ指定 :")
 folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
