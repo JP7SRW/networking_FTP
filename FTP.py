@@ -211,6 +211,7 @@ def client_window():
     lb_label.grid(column=0, row=0, pady=5, sticky=tk.N)
 
     #サーバ側のファイルの一覧取得
+    ftp.encoding = 'utf-8'
     files = ftp.nlst(".")
 
     #ファイル名を取得
