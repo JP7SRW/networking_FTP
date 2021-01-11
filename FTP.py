@@ -18,6 +18,37 @@ import time
 server_flag = False
 client_flag = False
 
+def error_window(error_sentence):
+
+    def stop_error():
+        error_win.destroy()
+
+    #main_winの子ウィンドウとしてerror_winを作成
+    error_win = tk.Toplevel()
+
+    #エラーウィンドウのタイトルを変更
+    error_win.title("エラー")
+
+    #エラーウィンドウのサイズを変更
+    error_win.geometry("200x100")
+
+    #ウィンドウアイコンの設定
+    error_win.iconbitmap("soft_ico.ico")
+
+    #サーバウィンドウにフレームを作成・配置
+    error_frm = ttk.Frame(error_win)
+    error_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
+
+    error_label = ttk.Label(error_frm, text=error_sentence)
+    error_label.grid(column=0, row=0, sticky=tk.W, pady=5)
+
+    #終了ボタン作成・配置
+    error_close = ttk.Button(error_frm, text="閉じる", command=stop_error)
+    error_close.grid(column=0, row=1, sticky=tk.W, padx=5)
+
+    #windows側終了ボタン押下時関数呼び出し
+    error_win.protocol("WM_DELETE_WINDOW", exit_button)
+
 #サーバ起動時のウィンドウ起動関数
 def server_window():
 
@@ -64,7 +95,7 @@ def server_open():
     server_flag = True
 
     ip = combo.get()
-    port = port_box_s.get()
+    port = int(port_box_s.get())
     user = user_box_s.get()
     password = password_box_s.get()
     directory = folder_box_s.get()
@@ -130,7 +161,6 @@ def client_window():
                 nowload_size = os.path.getsize(dl_directory + "\\" + files[i])
                 time.sleep(0.05)
 
-            print("End")
             nowload_progressbar.stop()
             nowload_win.destroy()
             return
@@ -145,9 +175,13 @@ def client_window():
 
             #ダウンロード進行中のホップアップを出す
             nowload_win = tk.Toplevel()
+
             nowload_win.title("ダウンロードしています...")
+
             nowload_win.geometry("500x200")
+
             nowload_win.iconbitmap("soft_ico.ico")
+
             nowload_frm = ttk.Frame(nowload_win)
             nowload_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
@@ -203,7 +237,7 @@ def client_window():
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
     dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
-    dl_folder_box_s.insert(0, os.path.realpath("./download"))
+    dl_folder_box_s.insert(0, "C:/Users/"+ os.getlogin() +"/Downloads")
 
     dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
     dl_folder_btn_s.grid(column=2, row=1)
@@ -236,14 +270,28 @@ def client_connect():
     global ftp
     ftp = FTP()
 
-    #FTPサーバにログイン
-    ftp.connect(ip,port)
+    try:
+        #FTPサーバにログイン(5はタイムアウト秒)
+        ftp.connect(ip,port,5)
 
-    #匿名ログインの有無
-    if login_value.get():
-        ftp.login()
-    else:
-        ftp.login(user,password)
+        #匿名ログインの有無
+        if login_value.get():
+            ftp.login()
+        else:
+            ftp.login(user,password)
+
+    except ftplib.all_errors as e:
+
+        #ターミナルにエラー出力
+        print(e)
+        #エラーウィンドウ作成
+        error_window(e)
+        #ftp終了
+        ftp.close()
+        #接続ボタンを押下可能に戻す
+        ftp_connect.config(state = tk.NORMAL)
+
+        return
 
     client_window()
 
@@ -343,7 +391,7 @@ def folder():
     folder_path.set(path)
 
 folder_path = tk.StringVar()
-folder_label_s = ttk.Label(tab1, text="フォルダ指定 :")
+folder_label_s = ttk.Label(tab1, text="公開フォルダ指定 :")
 folder_label_s.grid(column=0, row=2, sticky=tk.E, pady=5)
 
 folder_box_s = ttk.Entry(tab1, textvariable = folder_path)
