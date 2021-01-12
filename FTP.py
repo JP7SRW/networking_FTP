@@ -390,8 +390,9 @@ nb.pack(fill="both",expand=1)
 
 
 #画像表示
-logo = tk.PhotoImage(file="soft_ico.png")
+logo = tk.PhotoImage(file='soft_ico.png')
 another = tk.PhotoImage(file="ロゴ関係/pien.png") #隠し機能用の画像
+
 canvas = tk.Canvas(width=200, height=195)
 canvas.place(x=400, y=155)
 canvas.create_image(0, 0, image=logo, anchor=tk.NW)
