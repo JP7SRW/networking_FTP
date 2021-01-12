@@ -30,7 +30,10 @@ def error_window(error_sentence):
     error_win.title("エラー")
 
     #エラーウィンドウのサイズを変更
-    error_win.geometry("200x100")
+    error_win.geometry("300x100")
+
+    #エラーウィンドウサイズを固定
+    error_win.resizable(width=False, height=False)
 
     #ウィンドウアイコンの設定
     error_win.iconbitmap("soft_ico.ico")
@@ -89,16 +92,50 @@ def server_window():
 #サーバ起動関数
 def server_open():
 
-    server_window()
-
-    global server_flag
-    server_flag = True
-
     ip = combo.get()
-    port = int(port_box_s.get())
     user = user_box_s.get()
     password = password_box_s.get()
     directory = folder_box_s.get()
+
+    #IPアドレス,ポート,フォルダの文字列を取得
+    port_str = port_box_s.get()
+    ip_len = len(ip)
+    port_len = len(port_str)
+    directory_len = len(directory)
+
+    #IPアドレスは少なくとも7文字以上(Ex 1.1.1.1)なので7文字以下はエラー
+    if(ip_len<7):
+        error_window('IPアドレスの入力に問題があります')
+
+        #接続ボタンを押下可能に戻す、初期状態に戻す
+        ftp_open.config(state = tk.NORMAL)
+        return
+
+    #ポートは0文字の場合にエラー
+    if(port_len<1):
+        error_window('ポート番号の入力に問題があります')
+
+        #接続ボタンを押下可能に戻す、初期状態に戻す
+        ftp_open.config(state = tk.NORMAL)
+        return
+
+    #フォルダは0文字の場合にエラー
+    if(directory_len<1):
+        error_window('公開フォルダの入力に問題があります')
+
+        #接続ボタンを押下可能に戻す、初期状態に戻す
+        ftp_open.config(state = tk.NORMAL)
+        return
+
+    #キャストは文字が入ってないとエラーになるのでここで行う
+    port = int(port_box_s.get())
+
+    #フラグ
+    global server_flag
+    server_flag = True
+
+    #サーバウィンドウ起動
+    server_window()
 
     # 認証ユーザーを作る
     authorizer = pyftpdlib.authorizers.DummyAuthorizer()
@@ -259,31 +296,35 @@ def client_window():
 def client_connect():
 
     ip = ip_box_c.get()
-
     user = user_box_c.get()
     password = password_box_c.get()
 
+    #IPアドレスとポートの文字列を取得
     port_str = port_box_c.get()
     ip_len = len(ip)
     port_len = len(port_str)
 
+    #IPアドレスは少なくとも7文字以上(Ex 1.1.1.1)なので7文字以下はエラー
     if(ip_len<7):
         error_window('IPアドレスの入力に問題があります')
 
-        #接続ボタンを押下可能に戻す
+        #接続ボタンを押下可能に戻す、初期状態に戻す
         ftp_connect.config(state = tk.NORMAL)
         return
 
+    #ポートはひとまず0文字の場合にエラー
     if(port_len<1):
         error_window('ポート番号の入力に問題があります')
 
-        #接続ボタンを押下可能に戻す
+        #接続ボタンを押下可能に戻す、初期状態に戻す
         ftp_connect.config(state = tk.NORMAL)
         return
 
+    #キャストは文字が入ってないとエラーになるのでここで行う
     #TODO: 何故かportだけintにキャストしないとエラーになる
     port = int(port_box_c.get())
 
+    #エラー判断をパスしたらフラグをたてる
     global client_flag
     client_flag = True
 
