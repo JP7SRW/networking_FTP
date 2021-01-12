@@ -366,7 +366,6 @@ nb.pack(fill="both",expand=1)
 
 # 画像表示
 logo = tk.PhotoImage(file="soft_ico.png")
- 
 canvas = tk.Canvas(width=200, height=195)
 canvas.place(x=400, y=155)
 canvas.create_image(0, 0, image=logo, anchor=tk.NW)
