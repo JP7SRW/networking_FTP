@@ -334,7 +334,7 @@ def exit_button():
 def showclock():
     while True:
         clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
+        clock.grid(column=0, row=6, sticky=tk.W, padx=0)
         clock = ttk.Label(tab2, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         clock.grid(column=0, row=7, sticky=tk.W, padx=0)
         time.sleep(1)
@@ -387,28 +387,24 @@ nb.add(tab2, text="クライアント", padding=3)
 #メインウィンドウにノートブックを配置
 nb.pack(fill="both",expand=1)
 
-
-
-#画像表示
+#画像読み込み
 logo = tk.PhotoImage(file="soft_ico.png")
-another = tk.PhotoImage(file="ロゴ関係/pien.png") #隠し機能用の画像
-canvas = tk.Canvas(width=200, height=195)
-canvas.place(x=400, y=155)
-canvas.create_image(0, 0, image=logo, anchor=tk.NW)
+logo = logo.subsample(2)
+pien = tk.PhotoImage(file="ロゴ関係/pien.png")
+pien = pien.subsample(2)
 
 #隠し機能
-def nextimage():
-    canvas.create_image(0, 0, image=another, anchor=tk.NW)
+counts = 0
 
-class App:
-    count = 0
-    def btn_action(self,event):
-        self.count += 1
-        if self.count==100:
-            nextimage()
+def secret_action(event):
+    global counts
+    counts += 1
 
-app = App()
-canvas.bind("<Button-1>",app.btn_action)
+    if counts == 100:
+        pien_image = ttk.Label(tab1, image=pien)
+        pien_image.grid(column=2, row=6, padx=20)
+        pien_image = ttk.Label(tab2, image=pien)
+        pien_image.grid(column=2, row=7, padx=20)
 
 #------以下tab1関係-------
 
@@ -489,8 +485,13 @@ login_anonymous_btn_c = tk.Checkbutton(tab1, variable=auth_value,
 login_anonymous_btn_c.grid(column=0, row=5, pady=10)
 
 #起動ボタン関係
-ftp_open = ttk.Button(tab1, text="起動", command=start_theread1)
+ftp_open = ttk.Button(tab1, text="起動", command=start_theread1, width=50)
 ftp_open.grid(column=1, row=6, sticky=tk.W, padx=90)
+
+#画像表示
+logo_image_s = ttk.Label(tab1, image=logo)
+logo_image_s.grid(column=2, row=6, padx=20)
+logo_image_s.bind("<Button-1>",secret_action)
 
 #時計スタート
 theread3.start()
@@ -551,8 +552,13 @@ login_anonymous_btn_c = tk.Checkbutton(tab2, variable=login_value,
 login_anonymous_btn_c.grid(column=0, row=6, pady=10)
 
 #起動ボタン関係
-ftp_connect = ttk.Button(tab2, text="接続", command=start_theread2)
+ftp_connect = ttk.Button(tab2, text="接続", command=start_theread2, width=29)
 ftp_connect.grid(column=1, row=7, sticky=tk.W, padx=90)
+
+#画像表示
+logo_image_c = ttk.Label(tab2, image=logo)
+logo_image_c.grid(column=2, row=7, padx=20)
+logo_image_c.bind("<Button-1>",secret_action)
 
 #------以上tab2関係-------
 
