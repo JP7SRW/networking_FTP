@@ -339,8 +339,11 @@ main_win = tk.Tk()
 #メインウィンドウのタイトルを変更
 main_win.title("ふぁいる共有ソフト")
 
-#メインウィンドウサイズを変更
+#メインウィンドウサイズの設定
 main_win.geometry("650x400")
+
+#メインウィンドウサイズを固定
+main_win.resizable(width=False, height=False)
 
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
@@ -364,7 +367,7 @@ nb.pack(fill="both",expand=1)
 
 #------以下tab1関係-------
 
-# 画像表示
+#画像表示
 logo = tk.PhotoImage(file="soft_ico.png")
 canvas = tk.Canvas(width=200, height=195)
 canvas.place(x=400, y=155)
