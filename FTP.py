@@ -364,6 +364,13 @@ nb.pack(fill="both",expand=1)
 
 #------以下tab1関係-------
 
+# 画像表示
+logo = tk.PhotoImage(file="soft_ico.png")
+ 
+canvas = tk.Canvas(width=200, height=195)
+canvas.place(x=400, y=155)
+canvas.create_image(0, 0, image=logo, anchor=tk.NW)
+
 #自IP表示
 ip_label_s = ttk.Label(tab1, text="自IPアドレス :")
 ip_label_s.grid(column=0, row=0, sticky=tk.E,pady=5)
