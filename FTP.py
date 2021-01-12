@@ -315,6 +315,8 @@ def showclock():
     while True:
         clock = ttk.Label(tab1, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         clock.grid(column=0, row=7, sticky=tk.W, padx=0)
+        clock = ttk.Label(tab2, text=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        clock.grid(column=0, row=7, sticky=tk.W, padx=0)
         time.sleep(1)
 
 #スレッディング宣言
