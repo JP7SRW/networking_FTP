@@ -367,13 +367,30 @@ nb.add(tab2, text="クライアント", padding=3)
 #メインウィンドウにノートブックを配置
 nb.pack(fill="both",expand=1)
 
-#------以下tab1関係-------
+
 
 #画像表示
 logo = tk.PhotoImage(file="soft_ico.png")
+another = tk.PhotoImage(file="ロゴ関係/pien.png") #隠し機能用の画像
 canvas = tk.Canvas(width=200, height=195)
 canvas.place(x=400, y=155)
 canvas.create_image(0, 0, image=logo, anchor=tk.NW)
+
+#隠し機能
+def nextimage():
+    canvas.create_image(0, 0, image=another, anchor=tk.NW)
+
+class App:
+    count = 0
+    def btn_action(self,event):
+        self.count += 1
+        if self.count==100:
+            nextimage()
+
+app = App()
+canvas.bind("<Button-1>",app.btn_action)
+
+#------以下tab1関係-------
 
 #自IP表示
 ip_label_s = ttk.Label(tab1, text="自IPアドレス :")
