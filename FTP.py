@@ -364,9 +364,6 @@ main_win.title("ふぁいる共有ソフト")
 #メインウィンドウサイズの設定
 main_win.geometry("650x400")
 
-#メインウィンドウサイズを固定
-main_win.resizable(width=False, height=False)
-
 #ウィンドウアイコンの設定
 main_win.iconbitmap("soft_ico.ico")
 
