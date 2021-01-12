@@ -258,14 +258,34 @@ def client_window():
 #クライアント起動関数
 def client_connect():
 
-    global client_flag
-    client_flag = True
-
     ip = ip_box_c.get()
-    #TODO: 何故かportだけintにキャストしないとエラーになる
-    port = int(port_box_c.get())
+
     user = user_box_c.get()
     password = password_box_c.get()
+
+    port_str = port_box_c.get()
+    ip_len = len(ip)
+    port_len = len(port_str)
+
+    if(ip_len<7):
+        error_window('IPアドレスの入力に問題があります')
+
+        #接続ボタンを押下可能に戻す
+        ftp_connect.config(state = tk.NORMAL)
+        return
+
+    if(port_len<1):
+        error_window('ポート番号の入力に問題があります')
+
+        #接続ボタンを押下可能に戻す
+        ftp_connect.config(state = tk.NORMAL)
+        return
+
+    #TODO: 何故かportだけintにキャストしないとエラーになる
+    port = int(port_box_c.get())
+
+    global client_flag
+    client_flag = True
 
     #FTPオブジェクトのインスタンス化
     global ftp
