@@ -402,6 +402,9 @@ main_win = tk.Tk()
 #メインウィンドウのタイトルを変更
 main_win.title("ふぁいる共有ソフト")
 
+#メインウィンドウのサイズを固定
+main_win.resizable(width=False,height=False)
+
 #メインウィンドウサイズの設定
 main_win.geometry("650x400")
 
