@@ -249,11 +249,12 @@ def client_window():
 
     #サーバ側のファイルの一覧取得
     ftp.encoding = 'utf-8'
-    files = []
-    ftp.dir(files.append)
+    files = ftp.nlst() # ファイル名のみの表記
+    lsfiles = [] # 詳細形式の表記
+    ftp.dir(lsfiles.append)
 
     #ファイル名を取得
-    txt = tk.StringVar(value=files)
+    txt = tk.StringVar(value=lsfiles)
 
     #リストボックス作成・設置
     lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
