@@ -249,7 +249,8 @@ def client_window():
 
     #サーバ側のファイルの一覧取得
     ftp.encoding = 'utf-8'
-    files = ftp.nlst(".")
+    files = []
+    ftp.dir(files.append)
 
     #ファイル名を取得
     txt = tk.StringVar(value=files)
