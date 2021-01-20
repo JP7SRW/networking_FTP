@@ -180,6 +180,16 @@ def client_window():
     client_frm = ttk.Frame(client_win)
     client_frm.grid(column=0, row=0, sticky=tk.NSEW, padx=5, pady=10)
 
+    #選択された対象がディレクトリかファイルか判断
+    def judge_df(event):
+        #リストボックスの選択されている項目を取得
+        for i in lb.curselection():
+            if(lsfiles[i][0] == "d"):
+                ftp.cwd(files[i] + '/')
+                client_window()
+            else:
+                select_lb(event)
+            
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
 
@@ -245,7 +255,7 @@ def client_window():
             theread5.start()
 
     lb_label = ttk.Label(client_frm, text="ダウンロードするファイル :")
-    lb_label.grid(column=0, row=0, pady=5, sticky=tk.N)
+    lb_label.grid(column=0, row=1, pady=5, sticky=tk.N)
 
     #サーバ側のファイルの一覧取得
     ftp.encoding = 'utf-8'
@@ -258,13 +268,20 @@ def client_window():
 
     #リストボックス作成・設置
     lb = tk.Listbox(client_frm, listvariable=txt, width=70, height=16)
-    lb.grid(column=1, row=0)
+    lb.grid(column=1, row=1)
 
-    #リストボックスの中身を選択したらselect_lbを実行
-    lb.bind("<<ListboxSelect>>", select_lb)
+    #リストボックスの中身を選択したらjudge_dfを実行
+    lb.bind("<<ListboxSelect>>", judge_df)
 
     #リストボックス内の複数選択を可能にする
     lb.configure(selectmode= tk.EXTENDED )
+
+    #現在のカレントディレクトリのパス
+    currentpath_label = ttk.Label(client_frm, text="現在のディレクトリ :")
+    currentpath_label.grid(column=0, row=0, pady=5)
+    currentpath = ttk.Label(client_frm, text=ftp.pwd())
+    currentpath.grid(column=1, row=0, pady=5)
+
 
     #フォルダー選択関係
     def dl_folder():
@@ -273,22 +290,22 @@ def client_window():
 
     dl_folder_path = tk.StringVar()
     dl_folder_label_s = ttk.Label(client_frm, text="保存先 :")
-    dl_folder_label_s.grid(column=0, row=1, pady=5)
+    dl_folder_label_s.grid(column=0, row=2, pady=5)
 
     dl_folder_box_s = ttk.Entry(client_frm, textvariable = dl_folder_path)
-    dl_folder_box_s.grid(column=1, row=1, sticky=tk.EW, padx=10)
+    dl_folder_box_s.grid(column=1, row=2, sticky=tk.EW, padx=10)
     dl_folder_box_s.insert(0, "C:/Users/"+ os.getlogin() +"/Downloads")
 
     dl_folder_btn_s = ttk.Button(client_frm, text="参照", command = dl_folder)
-    dl_folder_btn_s.grid(column=2, row=1)
+    dl_folder_btn_s.grid(column=2, row=2)
 
     #スクロールバーの作成・配置
     scrollbar = ttk.Scrollbar(client_frm,orient=tk.VERTICAL,command=lb.yview)
-    scrollbar.grid(column=2, row=0, sticky=tk.NS)
+    scrollbar.grid(column=2, row=1, sticky=tk.NS)
 
     #終了ボタンの作成・配置
     ftp_close = ttk.Button(client_frm, text="終了", command = stop_client)
-    ftp_close.grid(column=1, row=2, sticky=tk.N, padx=5)
+    ftp_close.grid(column=1, row=3, sticky=tk.N, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
     client_win.protocol("WM_DELETE_WINDOW", exit_button)
