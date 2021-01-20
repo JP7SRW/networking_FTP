@@ -165,6 +165,10 @@ def client_window():
         client_win.destroy()
         ftp_connect.config(state = tk.NORMAL)
 
+    def back_current_dir():
+        ftp.cwd("../")
+        client_window()
+
     client_win = tk.Toplevel()
 
     #サーバウィンドウのタイトルを変更
@@ -306,6 +310,11 @@ def client_window():
     #終了ボタンの作成・配置
     ftp_close = ttk.Button(client_frm, text="終了", command = stop_client)
     ftp_close.grid(column=1, row=3, sticky=tk.N, padx=5)
+
+    #戻るボタンの作成・配置
+    if ftp.pwd() != '/':
+            back_btn = ttk.Button(client_frm, text="戻る", command = back_current_dir)
+            back_btn.grid(column=0, row=3, sticky=tk.N, padx=5)
 
     #windows側終了ボタン押下時関数呼び出し
     client_win.protocol("WM_DELETE_WINDOW", exit_button)
