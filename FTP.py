@@ -14,6 +14,7 @@ from tkinter import ttk
 from ftplib import FTP
 import datetime
 import time
+import sys
 
 server_flag = False
 client_flag = False
@@ -393,7 +394,7 @@ def stop():
         server.close_all()
     if (client_flag):
         ftp.close()
-    exit()
+    sys.exit()
 
 #windows側終了ボタン押下時関数
 def exit_button():
