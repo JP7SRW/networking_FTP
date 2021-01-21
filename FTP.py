@@ -167,6 +167,7 @@ def client_window():
 
     def back_current_dir():
         ftp.cwd("../")
+        client_win.destroy()
         client_window()
 
     client_win = tk.Toplevel()
@@ -190,10 +191,11 @@ def client_window():
         for i in lb.curselection():
             if(lsfiles[i][0] == "d"):
                 ftp.cwd(files[i] + '/')
+                client_win.destroy()
                 client_window()
             else:
                 select_lb(event)
-            
+
     #選択されたファイルを専用フォルダにダウンロード
     def select_lb(event):
 
