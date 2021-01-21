@@ -67,7 +67,7 @@ def server_window():
     server_win.title("サーバ管理ウィンドウ")
 
     #サーバウィンドウのサイズを変更
-    server_win.geometry("200x100")
+    server_win.geometry("550x150")
 
     #ウィンドウアイコンの設定
     server_win.iconbitmap("soft_ico.ico")
@@ -80,7 +80,7 @@ def server_window():
     ip = combo.get()
     ip_label_s = ttk.Label(server_frm, text="自IPアドレス :")
     ip_label_s.grid(column=0, row=0, sticky=tk.W, pady=5)
-    ttk.Label(server_frm, text=ip).grid(column=1, row=0, sticky=tk.W, padx=5)
+    ttk.Label(server_frm, text=ip, font=("",50)).grid(column=1, row=0, sticky=tk.W, padx=5)
 
     #終了ボタン作成・配置
     ftp_close = ttk.Button(server_frm, text="終了", command = stop_server)
