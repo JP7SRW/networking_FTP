@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+#FTPサーバ＆クライアントソフト「FileをShareするのはEasy」
 import pyftpdlib.authorizers
 import pyftpdlib.handlers
 import pyftpdlib.servers
@@ -431,7 +433,7 @@ theread3.setDaemon(True)
 main_win = tk.Tk()
 
 #メインウィンドウのタイトルを変更
-main_win.title("ふぁいる共有ソフト")
+main_win.title("FileをShareするのはEasy")
 
 #メインウィンドウのサイズを固定
 main_win.resizable(width=False,height=False)
